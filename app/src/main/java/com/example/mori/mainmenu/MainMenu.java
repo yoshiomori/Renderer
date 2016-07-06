@@ -28,9 +28,9 @@ public class MainMenu implements GLSurfaceView.Renderer{
     private void loadShaderProgram() {
         program = GL.glCreateProgram();
         GL.glAttachShader(program, loadShader(GLES20.GL_VERTEX_SHADER,
-                "attribute vec4 vPosition;" +
+                "attribute vec2 vPosition;" +
                         "void main() {" +
-                        "  gl_Position = vPosition;" +
+                        "  gl_Position = vec4(vPosition, 0, 1);" +
                         "  gl_PointSize = 50;" +
                         "}"));
         GL.glAttachShader(program, loadShader(GLES20.GL_FRAGMENT_SHADER,
@@ -41,7 +41,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
         GL.glLinkProgram(program);
         mPositionHandle = GL.glGetAttribLocation(program, "vPosition");
         GL.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
-        GL.glVertexAttribPointer(mPositionHandle, 4, GLES20.GL_FLOAT, false, 4 * 4, 0);
+        GL.glVertexAttribPointer(mPositionHandle, 2, GLES20.GL_FLOAT, false, 2 * 4, 0);
     }
 
     private int loadShader(int type, String shaderCode){
@@ -52,7 +52,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
     }
 
     private void loadVertices() {
-        float[] vertice = new float[]{0.0f, 0.0f, 0.0f, 1.0f};
+        float[] vertice = new float[]{0.0f, 0.0f};
         buffers = new int[1];
         GL.glGenBuffers(buffers.length, buffers, 0);
         GL.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
