@@ -1,6 +1,5 @@
 package com.example.mori.mainmenu;
 
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -177,7 +176,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
                 false, 0, 0);
         GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, bufferObjects.get(3));
         GL.glEnableVertexAttribArray(programObject4.getAttributeLocation("vPosition"));
-        GLES20.glUniform4fv(programObject4.getUniformLocation("vColor"), 1, new float[]{0.0f, 0.0f, 1.0f, 1.0f}, 0);
+        GL.glUniform4fv(programObject4.getUniformLocation("vColor"), 1, new float[]{0.0f, 0.0f, 1.0f, 1.0f}, 0);
         GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
         GL.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
         GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);

@@ -145,4 +145,9 @@ public class GL extends ErrorCondition{
         GLES20.glDrawElements(mode, count, type, offset);
         checkGlError("glDrawElements");
     }
+
+    public static void glUniform4fv(int location, int count, float[] v, int offset) {
+        GLES20.glUniform4fv(location, count, v, offset);
+        checkGlError("glUniform4fv");
+    }
 }
