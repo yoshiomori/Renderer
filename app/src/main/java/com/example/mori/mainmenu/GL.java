@@ -1,7 +1,6 @@
 package com.example.mori.mainmenu;
 
 import android.opengl.GLES20;
-import android.util.Log;
 
 import java.nio.Buffer;
 
@@ -48,12 +47,6 @@ public class GL extends ErrorCondition{
     public static void glLinkProgram(int program) {
         GLES20.glLinkProgram(program);
         checkGlError("glLinkProgram");
-        int[] params = new int[1];
-        GLES20.glGetProgramiv(program, GLES20.GL_LINK_STATUS, params, 0);
-        if(params[0] == GLES20.GL_FALSE){
-            Log.e("Gl", "glLinkProgram fail");
-            throw new RuntimeException("glLinkProgram fail");
-        }
     }
 
     public static void glGenBuffers(int n, int[] buffers, int offset) {
@@ -113,15 +106,19 @@ public class GL extends ErrorCondition{
         checkGlError("glGetProgramiv");
     }
 
-    public static int countActiveAttribute(int program) {
-        int[] params = new int[1];
-        GL.glGetProgramiv(program, GL.GL_ACTIVE_ATTRIBUTES, params, 0);
-        return params[0];
+    public static void glGetActiveUniform(int program, int index, int bufrsize, int[] length,
+                                          int lengthOffset, int[] size, int sizeOffset, int[] type,
+                                          int typeOffset, byte[] name, int nameOffset) {
+        GLES20.glGetActiveUniform(program, index, bufrsize, length, lengthOffset, size,
+                sizeOffset, type, typeOffset, name, nameOffset);
+        checkGlError("glGetActiveUniform");
     }
 
-    public static int getAttributeMaxLength(int program) {
-        int[] params = new int[1];
-        GL.glGetProgramiv(program, GLES20.GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, params, 0);
-        return params[0];
+    public static void glGetActiveAttrib(int program, int index, int bufsize, int[] length,
+                                         int lengthOffset, int[] size, int sizeOffset, int[] type,
+                                         int typeOffset, byte[] name, int nameOffset) {
+        GLES20.glGetActiveAttrib(program, index, bufsize, length, lengthOffset, size, sizeOffset,
+                type, typeOffset, name, nameOffset);
+        checkGlError("glGetActiveAttrib");
     }
 }
