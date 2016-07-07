@@ -9,7 +9,15 @@ import java.nio.Buffer;
  * GLES20 com check error
  * Created by mori on 06/07/16.
  */
-public class GL{
+public class GL extends ErrorCondition{
+    public static final int GL_ARRAY_BUFFER = GLES20.GL_ARRAY_BUFFER;
+    public static final int GL_FLOAT = GLES20.GL_FLOAT;
+    public static final int GL_VERTEX_SHADER = GLES20.GL_VERTEX_SHADER;
+    public static final int GL_FRAGMENT_SHADER = GLES20.GL_FRAGMENT_SHADER;
+    public static final int GL_ACTIVE_ATTRIBUTES = GLES20.GL_ACTIVE_ATTRIBUTES;
+    public static final int GL_STATIC_DRAW = GLES20.GL_STATIC_DRAW;
+    public static final int GL_POINTS = GLES20.GL_POINTS;
+
     public static int glCreateProgram() {
         int program = GLES20.glCreateProgram();
         checkGlError("glCreateProgram");
@@ -40,6 +48,12 @@ public class GL{
     public static void glLinkProgram(int program) {
         GLES20.glLinkProgram(program);
         checkGlError("glLinkProgram");
+        int[] params = new int[1];
+        GLES20.glGetProgramiv(program, GLES20.GL_LINK_STATUS, params, 0);
+        if(params[0] == GLES20.GL_FALSE){
+            Log.e("Gl", "glLinkProgram fail");
+            throw new RuntimeException("glLinkProgram fail");
+        }
     }
 
     public static void glGenBuffers(int n, int[] buffers, int offset) {
@@ -91,9 +105,23 @@ public class GL{
 
     private static void checkGlError(String glOperation) {
         int error = GLES20.glGetError();
-        if (error != GLES20.GL_NO_ERROR) {
-            Log.e("Gl", glOperation + ": glError " + error);
-            throw new RuntimeException(glOperation + ": glError " + error);
-        }
+        e(error != GLES20.GL_NO_ERROR, "Gl", glOperation + ": glError " + error);
+    }
+
+    public static void glGetProgramiv(int program, int pname, int[] params, int offset) {
+        GLES20.glGetProgramiv(program, pname, params, offset);
+        checkGlError("glGetProgramiv");
+    }
+
+    public static int countActiveAttribute(int program) {
+        int[] params = new int[1];
+        GL.glGetProgramiv(program, GL.GL_ACTIVE_ATTRIBUTES, params, 0);
+        return params[0];
+    }
+
+    public static int getAttributeMaxLength(int program) {
+        int[] params = new int[1];
+        GL.glGetProgramiv(program, GLES20.GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, params, 0);
+        return params[0];
     }
 }
