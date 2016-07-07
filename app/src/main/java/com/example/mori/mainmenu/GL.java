@@ -3,6 +3,7 @@ package com.example.mori.mainmenu;
 import android.opengl.GLES20;
 
 import java.nio.Buffer;
+import java.nio.ShortBuffer;
 
 /**
  * GLES20 com check error
@@ -16,6 +17,19 @@ public class GL extends ErrorCondition{
     public static final int GL_ACTIVE_ATTRIBUTES = GLES20.GL_ACTIVE_ATTRIBUTES;
     public static final int GL_STATIC_DRAW = GLES20.GL_STATIC_DRAW;
     public static final int GL_POINTS = GLES20.GL_POINTS;
+    public static final int GL_TRIANGLES = GLES20.GL_TRIANGLES;
+    public static final int GL_UNSIGNED_SHORT = GLES20.GL_UNSIGNED_SHORT;
+    public static final int GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = GLES20.GL_ACTIVE_ATTRIBUTE_MAX_LENGTH;
+    public static final int GL_ACTIVE_UNIFORMS = GLES20.GL_ACTIVE_UNIFORMS;
+    public static final int GL_ACTIVE_UNIFORM_MAX_LENGTH = GLES20.GL_ACTIVE_UNIFORM_MAX_LENGTH;
+    public static final int GL_LINK_STATUS = GLES20.GL_LINK_STATUS;
+    public static final int GL_FALSE = GLES20.GL_FALSE;
+    public static final int GL_ELEMENT_ARRAY_BUFFER = GLES20.GL_ELEMENT_ARRAY_BUFFER;
+
+    private static void checkGlError(String glOperation) {
+        int error = GLES20.glGetError();
+        e(error != GLES20.GL_NO_ERROR, "Gl", glOperation + ": glError " + error);
+    }
 
     public static int glCreateProgram() {
         int program = GLES20.glCreateProgram();
@@ -74,12 +88,6 @@ public class GL extends ErrorCondition{
         checkGlError("glUseProgram");
     }
 
-    public static int glGetAttribLocation(int program, String name) {
-        int attribLocation = GLES20.glGetAttribLocation(program, name);
-        checkGlError("glGetAttribLocation");
-        return attribLocation;
-    }
-
     public static void glEnableVertexAttribArray(int index) {
         GLES20.glEnableVertexAttribArray(index);
         checkGlError("glEnableVertexAttribArray");
@@ -91,14 +99,15 @@ public class GL extends ErrorCondition{
         checkGlError("glVertexAttribPointer");
     }
 
+    public static void glVertexAttribPointer(int indx, int size, int type, boolean normalized,
+                                             int stride, Buffer ptr) {
+        GLES20.glVertexAttribPointer(indx, size, type, normalized, stride, ptr);
+        checkGlError("glVertexAttribPointer");
+    }
+
     public static void glDrawArrays(int mode, int first, int count) {
         GLES20.glDrawArrays(mode, first, count);
         checkGlError("glDrawArrays");
-    }
-
-    private static void checkGlError(String glOperation) {
-        int error = GLES20.glGetError();
-        e(error != GLES20.GL_NO_ERROR, "Gl", glOperation + ": glError " + error);
     }
 
     public static void glGetProgramiv(int program, int pname, int[] params, int offset) {
@@ -106,13 +115,13 @@ public class GL extends ErrorCondition{
         checkGlError("glGetProgramiv");
     }
 
-    public static void glGetActiveUniform(int program, int index, int bufrsize, int[] length,
-                                          int lengthOffset, int[] size, int sizeOffset, int[] type,
-                                          int typeOffset, byte[] name, int nameOffset) {
-        GLES20.glGetActiveUniform(program, index, bufrsize, length, lengthOffset, size,
-                sizeOffset, type, typeOffset, name, nameOffset);
-        checkGlError("glGetActiveUniform");
-    }
+//    public static void glGetActiveUniform(int program, int index, int bufsize, int[] length,
+//                                          int lengthOffset, int[] size, int sizeOffset, int[] type,
+//                                          int typeOffset, byte[] name, int nameOffset) {
+//        GLES20.glGetActiveUniform(program, index, bufsize, length, lengthOffset, size,
+//                sizeOffset, type, typeOffset, name, nameOffset);
+//        checkGlError("glGetActiveUniform");
+//    }
 
     public static void glGetActiveAttrib(int program, int index, int bufsize, int[] length,
                                          int lengthOffset, int[] size, int sizeOffset, int[] type,
@@ -120,5 +129,20 @@ public class GL extends ErrorCondition{
         GLES20.glGetActiveAttrib(program, index, bufsize, length, lengthOffset, size, sizeOffset,
                 type, typeOffset, name, nameOffset);
         checkGlError("glGetActiveAttrib");
+    }
+
+    public static void glDisableVertexAttribArray(int index) {
+        GLES20.glDisableVertexAttribArray(index);
+        checkGlError("glDisableVertexAttribArray");
+    }
+
+    public static void glDrawElements(int mode, int count, int type, ShortBuffer data) {
+        GLES20.glDrawElements(mode, count, type, data);
+        checkGlError("glDrawElements");
+    }
+
+    public static void glDrawElements(int mode, int count, int type, int offset) {
+        GLES20.glDrawElements(mode, count, type, offset);
+        checkGlError("glDrawElements");
     }
 }

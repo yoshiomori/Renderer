@@ -1,7 +1,5 @@
 package com.example.mori.mainmenu;
 
-import android.opengl.GLES20;
-
 import java.util.HashMap;
 
 /**
@@ -9,12 +7,13 @@ import java.util.HashMap;
  * Created by mori on 07/07/16.
  */
 public class GLProgramObject extends ErrorCondition {
+    private static int GL_ACTIVE_ATTRIBUTES = 0;
+    private static int GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = 1;
+    private static int GL_ACTIVE_UNIFORMS = 2;
+    private static int GL_ACTIVE_UNIFORM_MAX_LENGTH = 3;
+    private static final int GL_LINK_STATUS = 4;
     private int program;
-    private int[] programInfo = new int[4];
-    public int GL_ACTIVE_ATTRIBUTES = 0;
-    public int GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = 1;
-    public int GL_ACTIVE_UNIFORMS = 2;
-    public int GL_ACTIVE_UNIFORM_MAX_LENGTH = 3;
+    private int[] programInfo = new int[5];
     private HashMap<String, Integer> attributeLocation;
 
     public GLProgramObject(String vertexShader, String fragmentShader) {
@@ -37,11 +36,13 @@ public class GLProgramObject extends ErrorCondition {
 
     private void initProgramInfo() {
         GL.glGetProgramiv(program, GL.GL_ACTIVE_ATTRIBUTES, programInfo, GL_ACTIVE_ATTRIBUTES);
-        GL.glGetProgramiv(program, GLES20.GL_ACTIVE_ATTRIBUTE_MAX_LENGTH,
+        GL.glGetProgramiv(program, GL.GL_ACTIVE_ATTRIBUTE_MAX_LENGTH,
                 programInfo, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH);
-        GL.glGetProgramiv(program, GLES20.GL_ACTIVE_UNIFORMS, programInfo, GL_ACTIVE_UNIFORMS);
-        GL.glGetProgramiv(program, GLES20.GL_ACTIVE_UNIFORM_MAX_LENGTH, programInfo,
+        GL.glGetProgramiv(program, GL.GL_ACTIVE_UNIFORMS, programInfo, GL_ACTIVE_UNIFORMS);
+        GL.glGetProgramiv(program, GL.GL_ACTIVE_UNIFORM_MAX_LENGTH, programInfo,
                 GL_ACTIVE_UNIFORM_MAX_LENGTH);
+        GL.glGetProgramiv(program, GL.GL_LINK_STATUS, programInfo, GL_LINK_STATUS);
+        e(programInfo[GL_LINK_STATUS] == GL.GL_FALSE, this.toString(), "Link fail");
     }
 
     private void initProgram(String vertexShader, String fragmentShader) {
