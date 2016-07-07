@@ -115,13 +115,13 @@ public class GL extends ErrorCondition{
         checkGlError("glGetProgramiv");
     }
 
-//    public static void glGetActiveUniform(int program, int index, int bufsize, int[] length,
-//                                          int lengthOffset, int[] size, int sizeOffset, int[] type,
-//                                          int typeOffset, byte[] name, int nameOffset) {
-//        GLES20.glGetActiveUniform(program, index, bufsize, length, lengthOffset, size,
-//                sizeOffset, type, typeOffset, name, nameOffset);
-//        checkGlError("glGetActiveUniform");
-//    }
+    public static void glGetActiveUniform(int program, int index, int bufsize, int[] length,
+                                          int lengthOffset, int[] size, int sizeOffset, int[] type,
+                                          int typeOffset, byte[] name, int nameOffset) {
+        GLES20.glGetActiveUniform(program, index, bufsize, length, lengthOffset, size,
+                sizeOffset, type, typeOffset, name, nameOffset);
+        checkGlError("glGetActiveUniform");
+    }
 
     public static void glGetActiveAttrib(int program, int index, int bufsize, int[] length,
                                          int lengthOffset, int[] size, int sizeOffset, int[] type,

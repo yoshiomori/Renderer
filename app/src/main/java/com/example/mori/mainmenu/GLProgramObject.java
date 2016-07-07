@@ -15,11 +15,25 @@ public class GLProgramObject extends ErrorCondition {
     private int program;
     private int[] programInfo = new int[5];
     private HashMap<String, Integer> attributeLocation;
+    private HashMap<String, Integer> uniformLocation;
 
     public GLProgramObject(String vertexShader, String fragmentShader) {
         initProgram(vertexShader, fragmentShader);
         initProgramInfo();
         initAttributeLocation();
+        initUniformLocation();
+    }
+
+    private void initUniformLocation() {
+        byte[] name = new byte[programInfo[GL_ACTIVE_UNIFORM_MAX_LENGTH]];
+        int[] length = new int[1];
+        int[] size = new int[1];
+        int[] type = new int[1];
+        uniformLocation = new HashMap<>(programInfo[GL_ACTIVE_UNIFORMS]);
+        for (int index = 0; index < programInfo[GL_ACTIVE_UNIFORMS]; index++) {
+            GL.glGetActiveUniform(program, index, name.length, length, 0, size, 0, type, 0, name, 0);
+            uniformLocation.put(new String(name, 0, length[0]), index);
+        }
     }
 
     private void initAttributeLocation() {
@@ -27,7 +41,7 @@ public class GLProgramObject extends ErrorCondition {
         int[] length = new int[1];
         int[] size = new int[1];
         int[] type = new int[1];
-        attributeLocation = new HashMap<>(programInfo[GL_ACTIVE_ATTRIBUTE_MAX_LENGTH]);
+        attributeLocation = new HashMap<>(programInfo[GL_ACTIVE_ATTRIBUTES]);
         for (int index = 0; index < programInfo[GL_ACTIVE_ATTRIBUTES]; index++) {
             GL.glGetActiveAttrib(program, index, name.length, length, 0, size, 0, type, 0, name, 0);
             attributeLocation.put(new String(name, 0, length[0]), index);
@@ -65,5 +79,9 @@ public class GLProgramObject extends ErrorCondition {
 
     public int getAttributeLocation(String attributeName) {
         return attributeLocation.get(attributeName);
+    }
+
+    public int getUniformLocation(String uniformName) {
+        return uniformLocation.get(uniformName);
     }
 }
