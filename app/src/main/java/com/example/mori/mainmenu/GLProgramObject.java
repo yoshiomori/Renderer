@@ -79,10 +79,6 @@ public class GLProgramObject extends ErrorCondition {
         return shader;
     }
 
-    public int get() {
-        return program;
-    }
-
     public int getAttributeLocation(String attributeName) {
         e(!attributeLocation.containsKey(attributeName), "getAttributeLocation", attributeName
                 + " attribute não existe!");
@@ -93,5 +89,9 @@ public class GLProgramObject extends ErrorCondition {
         e(!uniformLocation.containsKey(uniformName), "getUniformLocation", uniformName
                 + " uniform não existe!");
         return uniformLocation.get(uniformName);
+    }
+
+    public void use() {
+        GL.glUseProgram(program);
     }
 }

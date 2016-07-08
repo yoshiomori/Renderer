@@ -165,7 +165,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
 
 
         // Desenhando com buffer array
-        GL.glUseProgram(programObject.get());
+        programObject.use();
 
         bufferObjects.bindArray(0);
         GL.glVertexAttribPointer(programObject.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
@@ -179,7 +179,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
 
 
         // Desenhando com buffer array e outro programa objeto
-        GL.glUseProgram(programObject1.get());
+        programObject1.use();
 
         bufferObjects.bindArray(1);
         GL.glVertexAttribPointer(programObject1.getAttributeLocation("vPosition"), 4, GL.GL_FLOAT,
@@ -193,7 +193,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
 
 
         // Desenhando sem buffer array, com elementos de vértice e outro programa objeto
-        GL.glUseProgram(programObject2.get());
+        programObject2.use();
 
         GL.glVertexAttribPointer(programObject2.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
                 false, 0, GlBufferObjects.adaptData(new float[]{
@@ -224,7 +224,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
 
 
         // Desenhando com buffer array, element array buffer e em outro programa objeto
-        GL.glUseProgram(programObject3.get());
+        programObject3.use();
 
         bufferObjects.bindArray(2);
         GL.glVertexAttribPointer(programObject3.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
@@ -240,7 +240,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
 
 
         // Desenhando com buffer array, element array buffer, uniform e em outro programa
-        GL.glUseProgram(programObject4.get());
+        programObject4.use();
 
         bufferObjects.bindArray(2);
         GL.glVertexAttribPointer(programObject4.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
@@ -259,7 +259,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
 
 
         // Desenhando com buffer array, element array buffer, uniform, em outro programa e com textura
-        GL.glUseProgram(programObject5.get());
+        programObject5.use();
 
         bufferObjects.bindArray(4);
         GL.glVertexAttribPointer(programObject5.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
@@ -282,7 +282,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
 
 
         // Desenhando sem array buffer, sem element array buffer, sem texture
-        GL.glUseProgram(programObject6.get());
+        programObject6.use();
 
         GL.glVertexAttribPointer(programObject6.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT, false, 0, GlBufferObjects.adaptData(new float[]{0.0f, 0.0f}));
         GL.glEnableVertexAttribArray(programObject6.getAttributeLocation("vPosition"));
