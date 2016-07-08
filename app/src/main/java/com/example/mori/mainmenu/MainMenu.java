@@ -164,107 +164,13 @@ public class MainMenu implements GLSurfaceView.Renderer{
         GL.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 
-        // Desenhando com buffer array
-        programObject.use();
-
-        bufferObjects.bindArray(0);
-        GL.glVertexAttribPointer(programObject.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
-                false, 0, 0);
-        GL.glEnableVertexAttribArray(programObject.getAttributeLocation("vPosition"));
-
-        GL.glDrawArrays(GL.GL_POINTS, 0, 1);
-
-        GL.glDisableVertexAttribArray(programObject.getAttributeLocation("vPosition"));
-        bufferObjects.unbindArray();
-
-
-        // Desenhando com buffer array e outro programa objeto
-        programObject1.use();
-
-        bufferObjects.bindArray(1);
-        GL.glVertexAttribPointer(programObject1.getAttributeLocation("vPosition"), 4, GL.GL_FLOAT,
-                false, 0, 0);
-        GL.glEnableVertexAttribArray(programObject1.getAttributeLocation("vPosition"));
-
-        GL.glDrawArrays(GL.GL_POINTS, 0, 1);
-
-        GL.glDisableVertexAttribArray(programObject1.getAttributeLocation("vPosition"));
-        bufferObjects.unbindArray();
-
-
-        // Desenhando sem buffer array, com elementos de vértice e outro programa objeto
-        programObject2.use();
-
-        GL.glVertexAttribPointer(programObject2.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
-                false, 0, GlBufferObjects.adaptData(new float[]{
-                        -0.5f, 0.5f,
-                        0.5f, 0.5f,
-                        -0.5f, -0.5f,
-                        0.5f, -0.5f}));
-        GL.glEnableVertexAttribArray(programObject2.getAttributeLocation("vPosition"));
-
-        GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT,
-                GlBufferObjects.adaptData(new short[]{
-                        0, 3, 2,
-                        1, 0, 3}));
-
-
-        // Desenhando com buffer array, com elementos de vértices e no mesmo programa objeto
-        bufferObjects.bindArray(2);
-        GL.glVertexAttribPointer(programObject2.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
-                false, 0, 0);
-        GL.glEnableVertexAttribArray(programObject2.getAttributeLocation("vPosition"));
-
-        GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT,
-                GlBufferObjects.adaptData(new short[]{
-                        0, 3, 2,
-                        1, 0, 3}));
-
-        bufferObjects.unbindArray();
-
-
-        // Desenhando com buffer array, element array buffer e em outro programa objeto
-        programObject3.use();
-
-        bufferObjects.bindArray(2);
-        GL.glVertexAttribPointer(programObject3.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
-                false, 0, 0);
-        GL.glEnableVertexAttribArray(programObject3.getAttributeLocation("vPosition"));
-
-        bufferObjects.bindElementArray(3);
-
-        GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
-
-        bufferObjects.unbindArray();
-        bufferObjects.unbindElementArray();
-
-
-        // Desenhando com buffer array, element array buffer, uniform e em outro programa
-        programObject4.use();
-
-        bufferObjects.bindArray(2);
-        GL.glVertexAttribPointer(programObject4.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
-                false, 0, 0);
-        GL.glEnableVertexAttribArray(programObject4.getAttributeLocation("vPosition"));
-
-        bufferObjects.bindElementArray(3);
-
-        GL.glUniform4fv(programObject4.getUniformLocation("vColor"), 1,
-                new float[]{0.0f, 0.0f, 1.0f, 1.0f}, 0);
-
-        GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
-
-        bufferObjects.unbindArray();
-        bufferObjects.unbindElementArray();
-
-
         // Desenhando com buffer array, element array buffer, uniform, em outro programa e com textura
         programObject5.use();
 
         bufferObjects.bindArray(4);
         GL.glVertexAttribPointer(programObject5.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
                 false, 0, 0);
-        GL.glEnableVertexAttribArray(programObject5.getAttributeLocation("vPosition"));
+        programObject5.enableVertexAttribArray("vPosition");
 
         bufferObjects.bindElementArray(3);
 
@@ -281,11 +187,104 @@ public class MainMenu implements GLSurfaceView.Renderer{
         textureObjects.unbindTexture2D();
 
 
+        // Desenhando com buffer array
+        programObject.use();
+
+        bufferObjects.bindArray(0);
+        GL.glVertexAttribPointer(programObject.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
+                false, 0, 0);
+        programObject.enableVertexAttribArray("vPosition");
+
+        GL.glDrawArrays(GL.GL_POINTS, 0, 1);
+
+        GL.glDisableVertexAttribArray(programObject.getAttributeLocation("vPosition"));
+        bufferObjects.unbindArray();
+
+
+        // Desenhando com buffer array e outro programa objeto
+        programObject1.use();
+
+        bufferObjects.bindArray(1);
+        GL.glVertexAttribPointer(programObject1.getAttributeLocation("vPosition"), 4, GL.GL_FLOAT,
+                false, 0, 0);
+        programObject1.enableVertexAttribArray("vPosition");
+
+        GL.glDrawArrays(GL.GL_POINTS, 0, 1);
+
+        GL.glDisableVertexAttribArray(programObject1.getAttributeLocation("vPosition"));
+        bufferObjects.unbindArray();
+
+
+        // Desenhando sem buffer array, com elementos de vértice e outro programa objeto
+        programObject2.use();
+
+        GL.glVertexAttribPointer(programObject2.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
+                false, 0, GlBufferObjects.adaptData(new float[]{
+                        -0.5f, 0.5f,
+                        0.5f, 0.5f,
+                        -0.5f, -0.5f,
+                        0.5f, -0.5f}));
+        programObject2.enableVertexAttribArray("vPosition");
+
+        GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT,
+                GlBufferObjects.adaptData(new short[]{
+                        0, 3, 2,
+                        1, 0, 3}));
+
+
+        // Desenhando com buffer array, com elementos de vértices e no mesmo programa objeto
+        bufferObjects.bindArray(2);
+        GL.glVertexAttribPointer(programObject2.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
+                false, 0, 0);
+        programObject2.enableVertexAttribArray("vPosition");
+
+        GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT,
+                GlBufferObjects.adaptData(new short[]{
+                        0, 3, 2,
+                        1, 0, 3}));
+
+        bufferObjects.unbindArray();
+
+
+        // Desenhando com buffer array, element array buffer e em outro programa objeto
+        programObject3.use();
+
+        bufferObjects.bindArray(2);
+        GL.glVertexAttribPointer(programObject3.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
+                false, 0, 0);
+        programObject3.enableVertexAttribArray("vPosition");
+
+        bufferObjects.bindElementArray(3);
+
+        GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
+
+        bufferObjects.unbindArray();
+        bufferObjects.unbindElementArray();
+
+
+        // Desenhando com buffer array, element array buffer, uniform e em outro programa
+        programObject4.use();
+
+        bufferObjects.bindArray(2);
+        GL.glVertexAttribPointer(programObject4.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
+                false, 0, 0);
+        programObject4.enableVertexAttribArray("vPosition");
+
+        bufferObjects.bindElementArray(3);
+
+        GL.glUniform4fv(programObject4.getUniformLocation("vColor"), 1,
+                new float[]{0.0f, 0.0f, 1.0f, 1.0f}, 0);
+
+        GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
+
+        bufferObjects.unbindArray();
+        bufferObjects.unbindElementArray();
+
+
         // Desenhando sem array buffer, sem element array buffer, sem texture
         programObject6.use();
 
         GL.glVertexAttribPointer(programObject6.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT, false, 0, GlBufferObjects.adaptData(new float[]{0.0f, 0.0f}));
-        GL.glEnableVertexAttribArray(programObject6.getAttributeLocation("vPosition"));
 
         GL.glDrawArrays(GL.GL_POINTS, 0, 1);
     }

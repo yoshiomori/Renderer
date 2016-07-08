@@ -94,4 +94,8 @@ public class GLProgramObject extends ErrorCondition {
     public void use() {
         GL.glUseProgram(program);
     }
+
+    public void enableVertexAttribArray(String name) {
+        GL.glEnableVertexAttribArray(attributeLocation.get(name));
+    }
 }
