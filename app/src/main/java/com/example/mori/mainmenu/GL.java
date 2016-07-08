@@ -25,6 +25,7 @@ public class GL extends ErrorCondition{
     public static final int GL_LINK_STATUS = GLES20.GL_LINK_STATUS;
     public static final int GL_FALSE = GLES20.GL_FALSE;
     public static final int GL_ELEMENT_ARRAY_BUFFER = GLES20.GL_ELEMENT_ARRAY_BUFFER;
+    public static final int GL_TEXTURE_2D = GLES20.GL_TEXTURE_2D;
 
     private static void checkGlError(String glOperation) {
         int error = GLES20.glGetError();
@@ -149,5 +150,20 @@ public class GL extends ErrorCondition{
     public static void glUniform4fv(int location, int count, float[] v, int offset) {
         GLES20.glUniform4fv(location, count, v, offset);
         checkGlError("glUniform4fv");
+    }
+
+    public static void glActiveTexture(int texture) {
+        GLES20.glActiveTexture(texture);
+        checkGlError("glActiveTexture");
+    }
+
+    public static void glBindTexture(int target, int texture) {
+        GLES20.glBindTexture(target, texture);
+        checkGlError("glBindTexture");
+    }
+
+    public static void glUniform1i(int location, int x) {
+        GLES20.glUniform1i(location, x);
+        checkGlError("glUniform1i");
     }
 }

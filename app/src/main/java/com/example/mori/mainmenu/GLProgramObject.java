@@ -1,5 +1,7 @@
 package com.example.mori.mainmenu;
 
+import android.opengl.GLES20;
+
 import java.util.HashMap;
 
 /**
@@ -70,6 +72,10 @@ public class GLProgramObject extends ErrorCondition {
         int shader = GL.glCreateShader(type);
         GL.glShaderSource(shader, shaderCode);
         GL.glCompileShader(shader);
+        int[] params = new int[1];
+        GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, params, 0);
+        e(params[0]==GL.GL_FALSE, "loadShader", "Erro no "
+                + (type==GL.GL_VERTEX_SHADER ? "vertex " : "fragment ") + "shader.");
         return shader;
     }
 
@@ -78,10 +84,14 @@ public class GLProgramObject extends ErrorCondition {
     }
 
     public int getAttributeLocation(String attributeName) {
+        e(!attributeLocation.containsKey(attributeName), "getAttributeLocation", attributeName
+                + " attribute não existe!");
         return attributeLocation.get(attributeName);
     }
 
     public int getUniformLocation(String uniformName) {
+        e(!uniformLocation.containsKey(uniformName), "getUniformLocation", uniformName
+                + " uniform não existe!");
         return uniformLocation.get(uniformName);
     }
 }

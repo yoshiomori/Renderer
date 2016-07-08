@@ -1,5 +1,6 @@
 package com.example.mori.mainmenu;
 
+import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -12,17 +13,30 @@ import javax.microedition.khronos.opengles.GL10;
 public class MainMenu implements GLSurfaceView.Renderer{
 
 
+    private final Bitmap mesa;
     private GLProgramObject programObject;
     private GlBufferObjects bufferObjects;
     private GLProgramObject programObject1;
     private GLProgramObject programObject2;
     private GLProgramObject programObject3;
     private GLProgramObject programObject4;
+    private GLProgramObject programObject5;
+    private GLTextureObjects textureObjects;
+
+    public MainMenu(Bitmap mesa) {
+        this.mesa = mesa;
+    }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         loadVertices();
+        loadTextures();
         loadShaderProgram();
+    }
+
+    private void loadTextures() {
+        textureObjects = new GLTextureObjects(1);
+        textureObjects.set(0, mesa);
     }
 
     private void loadShaderProgram() {
@@ -88,10 +102,27 @@ public class MainMenu implements GLSurfaceView.Renderer{
                         "void main() {" +
                         "  gl_FragColor = vColor;" +
                         "}");
+
+        programObject5 = new GLProgramObject(
+                "/* Vertex Shader */" +
+                        "attribute vec2 vPosition;" +
+                        "varying vec2 vTexCoord;" +
+                        "void main() {" +
+                        "  /* matriz é definida assim mat3(vec3(primeira_coluna), vec3(segunda_coluna), vec3(terceira_coluna)) */" +
+                        "  vTexCoord = (mat3(0.5, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 1.0) * vec3(vPosition, 1.0)).xy;" +
+                        "  gl_Position = vec4(vPosition, 0.0, 1.0);" +
+                        "}",
+                "/* Fragment Shader */" +
+                        "precision mediump float;" +
+                        "varying vec2 vTexCoord;" +
+                        "uniform sampler2D u_texture;" +
+                        "void main() {" +
+                        "  gl_FragColor = texture2D(u_texture, vTexCoord);" +
+                        "}");
     }
 
     private void loadVertices() {
-        bufferObjects = new GlBufferObjects(4);
+        bufferObjects = new GlBufferObjects(5);
         bufferObjects.set(0, new float[]{0.0f, 0.0f});
         bufferObjects.set(1, new float[]{0.5f, 0.5f, 0.0f, 1.0f});
         bufferObjects.set(2, new float[]{
@@ -102,6 +133,11 @@ public class MainMenu implements GLSurfaceView.Renderer{
         bufferObjects.set(3, new short[]{
                 0, 3, 2,
                 1, 0, 3});
+        bufferObjects.set(4, new float[]{
+                -1.0f, 1.0f,
+                1.0f, 1.0f,
+                -1.0f, -1.0f,
+                1.0f, -1.0f});
     }
 
     @Override
@@ -176,9 +212,25 @@ public class MainMenu implements GLSurfaceView.Renderer{
                 false, 0, 0);
         GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, bufferObjects.get(3));
         GL.glEnableVertexAttribArray(programObject4.getAttributeLocation("vPosition"));
-        GL.glUniform4fv(programObject4.getUniformLocation("vColor"), 1, new float[]{0.0f, 0.0f, 1.0f, 1.0f}, 0);
+        GL.glUniform4fv(programObject4.getUniformLocation("vColor"), 1,
+                new float[]{0.0f, 0.0f, 1.0f, 1.0f}, 0);
         GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
         GL.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
         GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        // Desenhando com buffer array, element array buffer, uniform, em outro programa e com textura
+        GL.glUseProgram(programObject5.get());
+        GL.glBindBuffer(GL.GL_ARRAY_BUFFER, bufferObjects.get(4));
+        GL.glVertexAttribPointer(programObject5.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
+                false, 0, 0);
+        GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, bufferObjects.get(3));
+        GL.glEnableVertexAttribArray(programObject5.getAttributeLocation("vPosition"));
+        GL.glActiveTexture(textureObjects.get(0));
+        GL.glBindTexture(GL.GL_TEXTURE_2D, textureObjects.get(0));
+        GL.glUniform1i(programObject5.getUniformLocation("u_texture"), 0);
+        GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
+        GL.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+        GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
+        GL.glBindTexture(GL.GL_TEXTURE_2D, 0);
     }
 }
