@@ -165,127 +165,116 @@ public class MainMenu implements GLSurfaceView.Renderer{
 
 
         // Desenhando com buffer array, element array buffer, uniform, em outro programa e com textura
-        programObject5.use();
+        programObject5.install();
 
         bufferObjects.bindArray(4);
-        GL.glVertexAttribPointer(programObject5.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
-                false, 0, 0);
-        programObject5.enableVertexAttribArray("vPosition");
-
-        bufferObjects.bindElementArray(3);
+        programObject5.define("vPosition", 0, 0);
 
         GL.glActiveTexture(GL.GL_TEXTURE0);
-
         textureObjects.bindTexture2D(0);
-
         GL.glUniform1i(programObject5.getUniformLocation("u_texture"), 0);
 
+        bufferObjects.bindElementArray(3);
+        programObject5.enableActiveAttributes();
         GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
-
+        programObject5.disableActiveAttributes();
         bufferObjects.unbindArray();
         bufferObjects.unbindElementArray();
         textureObjects.unbindTexture2D();
 
 
         // Desenhando com buffer array
-        programObject.use();
+        programObject.install();
 
         bufferObjects.bindArray(0);
-        GL.glVertexAttribPointer(programObject.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
-                false, 0, 0);
-        programObject.enableVertexAttribArray("vPosition");
+        programObject.define("vPosition", 0, 0);
 
+        programObject.enableActiveAttributes();
         GL.glDrawArrays(GL.GL_POINTS, 0, 1);
-
-        GL.glDisableVertexAttribArray(programObject.getAttributeLocation("vPosition"));
+        programObject.disableActiveAttributes();
         bufferObjects.unbindArray();
 
 
         // Desenhando com buffer array e outro programa objeto
-        programObject1.use();
+        programObject1.install();
 
         bufferObjects.bindArray(1);
-        GL.glVertexAttribPointer(programObject1.getAttributeLocation("vPosition"), 4, GL.GL_FLOAT,
-                false, 0, 0);
-        programObject1.enableVertexAttribArray("vPosition");
+        programObject1.define("vPosition", 0, 0);
 
+        programObject1.enableActiveAttributes();
         GL.glDrawArrays(GL.GL_POINTS, 0, 1);
-
-        GL.glDisableVertexAttribArray(programObject1.getAttributeLocation("vPosition"));
+        programObject1.disableActiveAttributes();
         bufferObjects.unbindArray();
 
 
         // Desenhando sem buffer array, com elementos de vértice e outro programa objeto
-        programObject2.use();
+        programObject2.install();
 
-        GL.glVertexAttribPointer(programObject2.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
-                false, 0, GlBufferObjects.adaptData(new float[]{
+        programObject2.define("vPosition", 0, GlBufferObjects.adaptData(new float[]{
                         -0.5f, 0.5f,
                         0.5f, 0.5f,
                         -0.5f, -0.5f,
                         0.5f, -0.5f}));
-        programObject2.enableVertexAttribArray("vPosition");
 
+        programObject2.enableActiveAttributes();
         GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT,
                 GlBufferObjects.adaptData(new short[]{
                         0, 3, 2,
                         1, 0, 3}));
+        programObject2.disableActiveAttributes();
 
 
         // Desenhando com buffer array, com elementos de vértices e no mesmo programa objeto
         bufferObjects.bindArray(2);
-        GL.glVertexAttribPointer(programObject2.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
-                false, 0, 0);
-        programObject2.enableVertexAttribArray("vPosition");
+        programObject2.define("vPosition", 0, 0);
 
+        programObject2.enableActiveAttributes();
         GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT,
                 GlBufferObjects.adaptData(new short[]{
                         0, 3, 2,
                         1, 0, 3}));
-
+        programObject2.disableActiveAttributes();
         bufferObjects.unbindArray();
 
 
         // Desenhando com buffer array, element array buffer e em outro programa objeto
-        programObject3.use();
+        programObject3.install();
 
         bufferObjects.bindArray(2);
-        GL.glVertexAttribPointer(programObject3.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
-                false, 0, 0);
-        programObject3.enableVertexAttribArray("vPosition");
+        programObject3.define("vPosition", 0, 0);
 
         bufferObjects.bindElementArray(3);
-
+        programObject3.enableActiveAttributes();
         GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
-
+        programObject3.disableActiveAttributes();
         bufferObjects.unbindArray();
         bufferObjects.unbindElementArray();
 
 
         // Desenhando com buffer array, element array buffer, uniform e em outro programa
-        programObject4.use();
+        programObject4.install();
 
         bufferObjects.bindArray(2);
-        GL.glVertexAttribPointer(programObject4.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT,
-                false, 0, 0);
-        programObject4.enableVertexAttribArray("vPosition");
-
-        bufferObjects.bindElementArray(3);
+        programObject4.define("vPosition", 0, 0);
 
         GL.glUniform4fv(programObject4.getUniformLocation("vColor"), 1,
                 new float[]{0.0f, 0.0f, 1.0f, 1.0f}, 0);
 
+        bufferObjects.bindElementArray(3);
+        programObject4.enableActiveAttributes();
         GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
-
+        programObject4.disableActiveAttributes();
         bufferObjects.unbindArray();
         bufferObjects.unbindElementArray();
 
 
         // Desenhando sem array buffer, sem element array buffer, sem texture
-        programObject6.use();
+        programObject6.install();
 
-        GL.glVertexAttribPointer(programObject6.getAttributeLocation("vPosition"), 2, GL.GL_FLOAT, false, 0, GlBufferObjects.adaptData(new float[]{0.0f, 0.0f}));
+        programObject6.define("vPosition", 0, GlBufferObjects.adaptData(new float[]{0.0f, 0.0f}));
 
+        programObject6.enableActiveAttributes();
         GL.glDrawArrays(GL.GL_POINTS, 0, 1);
+        programObject6.disableActiveAttributes();
     }
 }

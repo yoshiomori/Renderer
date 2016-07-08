@@ -2,7 +2,9 @@ package com.example.mori.mainmenu;
 
 import android.opengl.GLES20;
 
+import java.nio.Buffer;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Abstração de programa objeto da biblioteca gráfica
@@ -18,12 +20,21 @@ public class GLProgramObject extends ErrorCondition {
     private int[] programInfo = new int[5];
     private HashMap<String, Integer> attributeLocation;
     private HashMap<String, Integer> uniformLocation;
+    private int[] attributeType;
+    HashMap<Integer, Integer> vertexAttribSize = new HashMap<>();
+    HashMap<Integer, Integer> vertexAttribType = new HashMap<>();
 
     public GLProgramObject(String vertexShader, String fragmentShader) {
         initProgram(vertexShader, fragmentShader);
         initProgramInfo();
         initAttributeLocation();
         initUniformLocation();
+
+        // TODO Adicionar mais types e sizes
+        vertexAttribSize.put(GLES20.GL_FLOAT_VEC2, 2);
+        vertexAttribType.put(GLES20.GL_FLOAT_VEC2, GL.GL_FLOAT);
+        vertexAttribSize.put(GLES20.GL_FLOAT_VEC4, 4);
+        vertexAttribType.put(GLES20.GL_FLOAT_VEC4, GL.GL_FLOAT);
     }
 
     private void initUniformLocation() {
@@ -33,7 +44,8 @@ public class GLProgramObject extends ErrorCondition {
         int[] type = new int[1];
         uniformLocation = new HashMap<>(programInfo[GL_ACTIVE_UNIFORMS]);
         for (int index = 0; index < programInfo[GL_ACTIVE_UNIFORMS]; index++) {
-            GL.glGetActiveUniform(program, index, name.length, length, 0, size, 0, type, 0, name, 0);
+            GL.glGetActiveUniform(
+                    program, index, name.length, length, 0, size, 0, type, 0, name, 0);
             uniformLocation.put(new String(name, 0, length[0]), index);
         }
     }
@@ -42,10 +54,11 @@ public class GLProgramObject extends ErrorCondition {
         byte[] name = new byte[programInfo[GL_ACTIVE_ATTRIBUTE_MAX_LENGTH]];
         int[] length = new int[1];
         int[] size = new int[1];
-        int[] type = new int[1];
+        attributeType = new int[programInfo[GL_ACTIVE_ATTRIBUTES]];
         attributeLocation = new HashMap<>(programInfo[GL_ACTIVE_ATTRIBUTES]);
         for (int index = 0; index < programInfo[GL_ACTIVE_ATTRIBUTES]; index++) {
-            GL.glGetActiveAttrib(program, index, name.length, length, 0, size, 0, type, 0, name, 0);
+            GL.glGetActiveAttrib(program, index, name.length, length, 0, size, 0, attributeType,
+                    index, name, 0);
             attributeLocation.put(new String(name, 0, length[0]), index);
         }
     }
@@ -79,23 +92,43 @@ public class GLProgramObject extends ErrorCondition {
         return shader;
     }
 
-    public int getAttributeLocation(String attributeName) {
-        e(!attributeLocation.containsKey(attributeName), "getAttributeLocation", attributeName
-                + " attribute não existe!");
-        return attributeLocation.get(attributeName);
-    }
-
     public int getUniformLocation(String uniformName) {
         e(!uniformLocation.containsKey(uniformName), "getUniformLocation", uniformName
                 + " uniform não existe!");
         return uniformLocation.get(uniformName);
     }
 
-    public void use() {
+    public void install() {
         GL.glUseProgram(program);
     }
 
-    public void enableVertexAttribArray(String name) {
-        GL.glEnableVertexAttribArray(attributeLocation.get(name));
+    public void define(String name, int stride, int offset) {
+        Integer attribute = attributeLocation.get(name);
+
+        e(!vertexAttribSize.containsKey(attributeType[attribute]), this.toString(), "Attribute type não implementado.");
+        e(!vertexAttribType.containsKey(attributeType[attribute]), this.toString(), "Attribute type não implementado.");
+
+        GL.glVertexAttribPointer(attribute, vertexAttribSize.get(attributeType[attribute]), vertexAttribType.get(attributeType[attribute]),
+                false, stride, offset);
+    }
+
+    public void define(String name, int stride, Buffer ptr) {
+        Integer attribute = attributeLocation.get(name);
+
+        e(!vertexAttribSize.containsKey(attributeType[attribute]), this.toString(), "Attribute type não implementado.");
+        e(!vertexAttribType.containsKey(attributeType[attribute]), this.toString(), "Attribute type não implementado.");
+
+        GL.glVertexAttribPointer(attribute, vertexAttribSize.get(attributeType[attribute]),
+                vertexAttribType.get(attributeType[attribute]), false, stride, ptr);
+    }
+
+    public void enableActiveAttributes() {
+        for(int index = 0; index < programInfo[GL_ACTIVE_ATTRIBUTES]; index++)
+            GL.glEnableVertexAttribArray(index);
+    }
+
+    public void disableActiveAttributes() {
+        for(int index = 0; index < programInfo[GL_ACTIVE_ATTRIBUTES]; index++)
+            GL.glDisableVertexAttribArray(index);
     }
 }
