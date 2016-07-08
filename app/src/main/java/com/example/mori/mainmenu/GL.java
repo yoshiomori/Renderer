@@ -26,6 +26,7 @@ public class GL extends ErrorCondition{
     public static final int GL_FALSE = GLES20.GL_FALSE;
     public static final int GL_ELEMENT_ARRAY_BUFFER = GLES20.GL_ELEMENT_ARRAY_BUFFER;
     public static final int GL_TEXTURE_2D = GLES20.GL_TEXTURE_2D;
+    public static final int GL_TEXTURE0 = GLES20.GL_TEXTURE0;
 
     private static void checkGlError(String glOperation) {
         int error = GLES20.glGetError();
