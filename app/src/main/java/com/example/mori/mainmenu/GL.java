@@ -167,4 +167,10 @@ public class GL extends ErrorCondition{
         GLES20.glUniform1i(location, x);
         checkGlError("glUniform1i");
     }
+
+    public static void glUniformMatrix3fv(int location, int count, boolean transpose,
+                                          float[] value, int offset) {
+        GLES20.glUniformMatrix3fv(location, count, transpose, value, offset);
+        checkGlError("glUniformMatrix3fv");
+    }
 }

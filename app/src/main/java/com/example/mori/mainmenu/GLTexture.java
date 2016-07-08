@@ -9,10 +9,10 @@ import java.nio.ByteBuffer;
  * Abstração de objeto textura.
  * Created by mori on 08/07/16.
  */
-public class GLTextureObjects {
+public class GLTexture {
     private final int[] textures;
 
-    public GLTextureObjects(int n) {
+    public GLTexture(int n) {
         textures = new int[n];
         GLES20.glGenTextures(n, textures, 0);
     }

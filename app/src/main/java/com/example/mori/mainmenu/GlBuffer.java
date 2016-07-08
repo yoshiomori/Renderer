@@ -9,11 +9,11 @@ import java.nio.ShortBuffer;
  * Abstração de objeto buffer
  * Created by mori on 07/07/16.
  */
-public class GlBufferObjects {
+public class GlBuffer {
     private int[] buffers;
     private int[] sizes;
 
-    public GlBufferObjects(int n) {
+    public GlBuffer(int n) {
         buffers = new int[n];
         sizes = new int[n];
         GL.glGenBuffers(n, buffers, 0);

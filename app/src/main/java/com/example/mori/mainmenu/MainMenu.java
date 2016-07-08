@@ -14,15 +14,16 @@ public class MainMenu implements GLSurfaceView.Renderer{
 
 
     private final Bitmap mesa;
-    private GLProgramObject programObject;
-    private GlBufferObjects bufferObjects;
-    private GLProgramObject programObject1;
-    private GLProgramObject programObject2;
-    private GLProgramObject programObject3;
-    private GLProgramObject programObject4;
-    private GLProgramObject programObject5;
-    private GLTextureObjects textureObjects;
-    private GLProgramObject programObject6;
+    private GLProgram programObject;
+    private GlBuffer bufferObjects;
+    private GLProgram programObject1;
+    private GLProgram programObject2;
+    private GLProgram programObject3;
+    private GLProgram programObject4;
+    private GLProgram programObject5;
+    private GLTexture textureObjects;
+    private GLProgram programObject6;
+    private GLProgram programObject7;
 
     public MainMenu(Bitmap mesa) {
         this.mesa = mesa;
@@ -36,7 +37,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
     }
 
     private void loadBufferObjects() {
-        bufferObjects = new GlBufferObjects(5);
+        bufferObjects = new GlBuffer(5);
         bufferObjects.set(0, new float[]{0.0f, 0.0f});
         bufferObjects.set(1, new float[]{0.5f, 0.5f, 0.0f, 1.0f});
         bufferObjects.set(2, new float[]{
@@ -55,12 +56,12 @@ public class MainMenu implements GLSurfaceView.Renderer{
     }
 
     private void loadTextureObjects() {
-        textureObjects = new GLTextureObjects(1);
+        textureObjects = new GLTexture(1);
         textureObjects.set(0, mesa);
     }
 
     private void loadProgramObjects() {
-        programObject = new GLProgramObject(
+        programObject = new GLProgram(
                 "/* Vertex Shader */" +
                         "attribute vec2 vPosition;" +
                         "void main() {" +
@@ -73,7 +74,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
                         "  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);" +
                         "}");
 
-        programObject1 = new GLProgramObject(
+        programObject1 = new GLProgram(
                 "/* Vertex Shader */" +
                         "attribute vec4 vPosition;" +
                         "void main() {" +
@@ -86,7 +87,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
                         "  gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);" +
                         "}");
 
-        programObject2 = new GLProgramObject(
+        programObject2 = new GLProgram(
                 "/* Vertex Shader */" +
                         "attribute vec2 vPosition;" +
                         "void main() {" +
@@ -98,7 +99,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
                         "  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);" +
                         "}");
 
-        programObject3 = new GLProgramObject(
+        programObject3 = new GLProgram(
                 "/* Vertex Shader */" +
                         "attribute vec2 vPosition;" +
                         "void main() {" +
@@ -110,7 +111,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
                         "  gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);" +
                         "}");
 
-        programObject4 = new GLProgramObject(
+        programObject4 = new GLProgram(
                 "/* Vertex Shader */" +
                         "attribute vec2 vPosition;" +
                         "void main() {" +
@@ -123,7 +124,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
                         "  gl_FragColor = vColor;" +
                         "}");
 
-        programObject5 = new GLProgramObject(
+        programObject5 = new GLProgram(
                 "/* Vertex Shader */" +
                         "attribute vec2 vPosition;" +
                         "varying vec2 vTexCoord;" +
@@ -140,7 +141,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
                         "  gl_FragColor = texture2D(u_texture, vTexCoord);" +
                         "}");
 
-        programObject6 = new GLProgramObject(
+        programObject6 = new GLProgram(
                 "/* Vertex Shader */" +
                         "attribute vec2 vPosition;" +
                         "void main() {" +
@@ -151,6 +152,24 @@ public class MainMenu implements GLSurfaceView.Renderer{
                         "precision mediump float;" +
                         "void main() {" +
                         "  gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);" +
+                        "}");
+
+        programObject7 = new GLProgram(
+                "/* Vertex Shader */" +
+                        "attribute vec2 vPosition;" +
+                        "uniform mat3 transf_pos_tex;" +
+                        "varying vec2 vTexCoord;" +
+                        "void main() {" +
+                        "  /* matriz é definida assim mat3(vec3(primeira_coluna), vec3(segunda_coluna), vec3(terceira_coluna)) */" +
+                        "  vTexCoord = (transf_pos_tex * vec3(vPosition, 1.0)).xy;" +
+                        "  gl_Position = vec4(vPosition, 0.0, 1.0);" +
+                        "}",
+                "/* Fragment Shader */" +
+                        "precision mediump float;" +
+                        "varying vec2 vTexCoord;" +
+                        "uniform sampler2D u_texture;" +
+                        "void main() {" +
+                        "  gl_FragColor = texture2D(u_texture, vTexCoord);" +
                         "}");
     }
 
@@ -168,14 +187,14 @@ public class MainMenu implements GLSurfaceView.Renderer{
         programObject5.install();
 
         bufferObjects.bindArray(4);
-        programObject5.define("vPosition", 0, 0);
+        programObject5.defineAttribute("vPosition", 0, 0);
 
         GL.glActiveTexture(GL.GL_TEXTURE0);
         textureObjects.bindTexture2D(0);
-        GL.glUniform1i(programObject5.getUniformLocation("u_texture"), 0);
+        programObject5.defineUniform("u_texture", 0);
 
-        bufferObjects.bindElementArray(3);
         programObject5.enableActiveAttributes();
+        bufferObjects.bindElementArray(3);
         GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
         programObject5.disableActiveAttributes();
         bufferObjects.unbindArray();
@@ -187,7 +206,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
         programObject.install();
 
         bufferObjects.bindArray(0);
-        programObject.define("vPosition", 0, 0);
+        programObject.defineAttribute("vPosition", 0, 0);
 
         programObject.enableActiveAttributes();
         GL.glDrawArrays(GL.GL_POINTS, 0, 1);
@@ -199,7 +218,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
         programObject1.install();
 
         bufferObjects.bindArray(1);
-        programObject1.define("vPosition", 0, 0);
+        programObject1.defineAttribute("vPosition", 0, 0);
 
         programObject1.enableActiveAttributes();
         GL.glDrawArrays(GL.GL_POINTS, 0, 1);
@@ -210,7 +229,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
         // Desenhando sem buffer array, com elementos de vértice e outro programa objeto
         programObject2.install();
 
-        programObject2.define("vPosition", 0, GlBufferObjects.adaptData(new float[]{
+        programObject2.defineAttribute("vPosition", 0, GlBuffer.adaptData(new float[]{
                         -0.5f, 0.5f,
                         0.5f, 0.5f,
                         -0.5f, -0.5f,
@@ -218,7 +237,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
 
         programObject2.enableActiveAttributes();
         GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT,
-                GlBufferObjects.adaptData(new short[]{
+                GlBuffer.adaptData(new short[]{
                         0, 3, 2,
                         1, 0, 3}));
         programObject2.disableActiveAttributes();
@@ -226,11 +245,11 @@ public class MainMenu implements GLSurfaceView.Renderer{
 
         // Desenhando com buffer array, com elementos de vértices e no mesmo programa objeto
         bufferObjects.bindArray(2);
-        programObject2.define("vPosition", 0, 0);
+        programObject2.defineAttribute("vPosition", 0, 0);
 
         programObject2.enableActiveAttributes();
         GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT,
-                GlBufferObjects.adaptData(new short[]{
+                GlBuffer.adaptData(new short[]{
                         0, 3, 2,
                         1, 0, 3}));
         programObject2.disableActiveAttributes();
@@ -241,10 +260,10 @@ public class MainMenu implements GLSurfaceView.Renderer{
         programObject3.install();
 
         bufferObjects.bindArray(2);
-        programObject3.define("vPosition", 0, 0);
+        programObject3.defineAttribute("vPosition", 0, 0);
 
-        bufferObjects.bindElementArray(3);
         programObject3.enableActiveAttributes();
+        bufferObjects.bindElementArray(3);
         GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
         programObject3.disableActiveAttributes();
         bufferObjects.unbindArray();
@@ -255,13 +274,12 @@ public class MainMenu implements GLSurfaceView.Renderer{
         programObject4.install();
 
         bufferObjects.bindArray(2);
-        programObject4.define("vPosition", 0, 0);
+        programObject4.defineAttribute("vPosition", 0, 0);
 
-        GL.glUniform4fv(programObject4.getUniformLocation("vColor"), 1,
-                new float[]{0.0f, 0.0f, 1.0f, 1.0f}, 0);
+        programObject4.defineUniform("vColor", new float[]{0.0f, 0.0f, 1.0f, 1.0f});
 
-        bufferObjects.bindElementArray(3);
         programObject4.enableActiveAttributes();
+        bufferObjects.bindElementArray(3);
         GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
         programObject4.disableActiveAttributes();
         bufferObjects.unbindArray();
@@ -271,10 +289,30 @@ public class MainMenu implements GLSurfaceView.Renderer{
         // Desenhando sem array buffer, sem element array buffer, sem texture
         programObject6.install();
 
-        programObject6.define("vPosition", 0, GlBufferObjects.adaptData(new float[]{0.0f, 0.0f}));
+        programObject6.defineAttribute("vPosition", 0, GlBuffer.adaptData(new float[]{0.0f, 0.0f}));
 
         programObject6.enableActiveAttributes();
         GL.glDrawArrays(GL.GL_POINTS, 0, 1);
         programObject6.disableActiveAttributes();
+
+
+        // Desenhando com array buffer, com element array, com uniform e textura
+        programObject7.install();
+
+        bufferObjects.bindArray(2);
+        programObject7.defineAttribute("vPosition", 0, 0);
+
+        GL.glActiveTexture(GL.GL_TEXTURE0);
+        textureObjects.bindTexture2D(0);
+        programObject7.defineUniform("u_texture", 0);
+
+        programObject7.defineUniform("transf_pos_tex", new float[]{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.5f, 0.5f, 1.0f});
+
+        programObject7.enableActiveAttributes();
+        bufferObjects.bindElementArray(3);
+        GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_SHORT, 0);
+        programObject7.disableActiveAttributes();
+        bufferObjects.unbindElementArray();
+        bufferObjects.unbindArray();
     }
 }

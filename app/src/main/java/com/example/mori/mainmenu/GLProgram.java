@@ -4,13 +4,12 @@ import android.opengl.GLES20;
 
 import java.nio.Buffer;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Abstração de programa objeto da biblioteca gráfica
  * Created by mori on 07/07/16.
  */
-public class GLProgramObject extends ErrorCondition {
+public class GLProgram extends ErrorCondition {
     private static int GL_ACTIVE_ATTRIBUTES = 0;
     private static int GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = 1;
     private static int GL_ACTIVE_UNIFORMS = 2;
@@ -24,7 +23,7 @@ public class GLProgramObject extends ErrorCondition {
     HashMap<Integer, Integer> vertexAttribSize = new HashMap<>();
     HashMap<Integer, Integer> vertexAttribType = new HashMap<>();
 
-    public GLProgramObject(String vertexShader, String fragmentShader) {
+    public GLProgram(String vertexShader, String fragmentShader) {
         initProgram(vertexShader, fragmentShader);
         initProgramInfo();
         initAttributeLocation();
@@ -92,17 +91,11 @@ public class GLProgramObject extends ErrorCondition {
         return shader;
     }
 
-    public int getUniformLocation(String uniformName) {
-        e(!uniformLocation.containsKey(uniformName), "getUniformLocation", uniformName
-                + " uniform não existe!");
-        return uniformLocation.get(uniformName);
-    }
-
     public void install() {
         GL.glUseProgram(program);
     }
 
-    public void define(String name, int stride, int offset) {
+    public void defineAttribute(String name, int stride, int offset) {
         Integer attribute = attributeLocation.get(name);
 
         e(!vertexAttribSize.containsKey(attributeType[attribute]), this.toString(), "Attribute type não implementado.");
@@ -112,7 +105,7 @@ public class GLProgramObject extends ErrorCondition {
                 false, stride, offset);
     }
 
-    public void define(String name, int stride, Buffer ptr) {
+    public void defineAttribute(String name, int stride, Buffer ptr) {
         Integer attribute = attributeLocation.get(name);
 
         e(!vertexAttribSize.containsKey(attributeType[attribute]), this.toString(), "Attribute type não implementado.");
@@ -130,5 +123,22 @@ public class GLProgramObject extends ErrorCondition {
     public void disableActiveAttributes() {
         for(int index = 0; index < programInfo[GL_ACTIVE_ATTRIBUTES]; index++)
             GL.glDisableVertexAttribArray(index);
+    }
+
+    public void defineUniform(String name, int data) {
+        GL.glUniform1i(uniformLocation.get(name), data);
+    }
+
+    public void defineUniform(String name, float[] data) {
+        switch (data.length){
+            case 3*3:
+                GL.glUniformMatrix3fv(uniformLocation.get(name), 1, false, data, 0);
+                break;
+            case 4:
+                GL.glUniform4fv(uniformLocation.get(name), 1, data, 0);
+                break;
+            default:
+                throw new RuntimeException("Caso não implementado.");
+        }
     }
 }
