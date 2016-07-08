@@ -42,10 +42,6 @@ public class GlBufferObjects {
         return floatBuffer;
     }
 
-    public int get(int index) {
-        return buffers[index];
-    }
-
     public static ShortBuffer adaptData(short[] data) {
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(data.length * Short.SIZE);
         byteBuffer.order(ByteOrder.nativeOrder());
@@ -53,5 +49,21 @@ public class GlBufferObjects {
         shortBuffer.put(data);
         shortBuffer.position(0);
         return shortBuffer;
+    }
+
+    public void bindArray(int index) {
+        GL.glBindBuffer(GL.GL_ARRAY_BUFFER, buffers[index]);
+    }
+
+    public void unbindArray() {
+        GL.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+    }
+
+    public void bindElementArray(int index) {
+        GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, buffers[index]);
+    }
+
+    public void unbindElementArray() {
+        GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 }

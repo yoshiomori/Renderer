@@ -34,7 +34,11 @@ public class GLTextureObjects {
         return byteBuffer;
     }
 
-    public int get(int index) {
-        return textures[index];
+    public void unbindTexture2D() {
+        GL.glBindTexture(GL.GL_TEXTURE_2D, 0);
+    }
+
+    public void bindTexture2D(int index) {
+        GL.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);
     }
 }
