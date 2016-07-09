@@ -10,26 +10,33 @@ import java.util.HashMap;
  * Created by mori on 09/07/16.
  */
 public class GLProgram {
+    private final ArrayList<GLUniform> uniforms;
     private final int mode;
     private final int first;
     private final int count;
     private int program;
-    private int[] programInfo = new int[6];
-    public int GL_ACTIVE_ATTRIBUTES = 0;
-    public int GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = 1;
-    public int GL_ACTIVE_UNIFORMS = 2;
-    public int GL_ACTIVE_UNIFORM_MAX_LENGTH = 3;
+    private final int[] programInfo = new int[6];
+    public final int GL_ACTIVE_ATTRIBUTES = 0;
+    public final int GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = 1;
+    public final int GL_ACTIVE_UNIFORMS = 2;
+    public final int GL_ACTIVE_UNIFORM_MAX_LENGTH = 3;
     public final int GL_LINK_STATUS = 4;
     public final int GL_ATTACHED_SHADERS = 5;
     private HashMap<String, Integer> attributeLocation;
+    private HashMap<String, Integer> uniformLocation;
     private int[] attributeType;
     private final int index;
-    private ArrayList<GLAttribute> attributes;
+    private final ArrayList<GLAttribute> attributes;
+    private int[] uniformType;
 
-    public GLProgram(int index, ArrayList<GLAttribute> attributes, String vertexShaderCode,
-                     String fragmentShaderCode, int mode, int first, int count) {
+
+    public GLProgram(int index, ArrayList<GLAttribute> attributes, ArrayList<GLUniform> uniforms,
+                     String vertexShaderCode, String fragmentShaderCode, int mode, int first,
+                     int count) {
+
         this.index = index;
         this.attributes = attributes;
+        this.uniforms = uniforms;
         this.mode = mode;
         this.first = first;
         this.count = count;
@@ -37,18 +44,34 @@ public class GLProgram {
         initProgram(vertexShaderCode, fragmentShaderCode);
         initProgramInfo();
         initAttributeLocation();
+        initUniformLocation();
 
         if (programInfo[GL_LINK_STATUS] == GLES20.GL_FALSE) {
             throw new RuntimeException("Link error: attached shader: " + programInfo[GL_ATTACHED_SHADERS]);
         }
     }
 
+    private void initUniformLocation() {
+
+        byte[] name = new byte[programInfo[GL_ACTIVE_UNIFORM_MAX_LENGTH]];
+        int[] length = new int[1];
+        int[] size = new int[1];
+        uniformType = new int[programInfo[GL_ACTIVE_UNIFORMS]];
+        uniformLocation = new HashMap<>(programInfo[GL_ACTIVE_UNIFORMS]);
+        for (int index = 0; index < programInfo[GL_ACTIVE_UNIFORMS]; index++) {
+            GL.glGetActiveUniform(program, index, name.length, length, 0, size, 0, attributeType,
+                    index, name, 0);
+            uniformLocation.put(new String(name, 0, length[0]), index);
+        }
+    }
+
     private void initAttributeLocation() {
+
         byte[] name = new byte[programInfo[GL_ACTIVE_ATTRIBUTE_MAX_LENGTH]];
         int[] length = new int[1];
         int[] size = new int[1];
         attributeType = new int[programInfo[GL_ACTIVE_ATTRIBUTES]];
-        attributeLocation = new HashMap<>(programInfo[GL_ACTIVE_ATTRIBUTE_MAX_LENGTH]);
+        attributeLocation = new HashMap<>(programInfo[GL_ACTIVE_ATTRIBUTES]);
         for (int index = 0; index < programInfo[GL_ACTIVE_ATTRIBUTES]; index++) {
             GL.glGetActiveAttrib(program, index, name.length, length, 0, size, 0, attributeType, index, name, 0);
             attributeLocation.put(new String(name, 0, length[0]), index);
@@ -56,6 +79,7 @@ public class GLProgram {
     }
 
     private void initProgramInfo() {
+
         GL.glGetProgramiv(program, GL.GL_ACTIVE_ATTRIBUTES, programInfo, GL_ACTIVE_ATTRIBUTES);
         GL.glGetProgramiv(program, GLES20.GL_ACTIVE_ATTRIBUTE_MAX_LENGTH,
                 programInfo, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH);
@@ -69,6 +93,7 @@ public class GLProgram {
     }
 
     private void initProgram(String vertexShader, String fragmentShader) {
+
         program = GL.glCreateProgram();
         if (program == 0)
             throw new RuntimeException("Falha ao criar o programa");
@@ -78,30 +103,11 @@ public class GLProgram {
     }
 
     private int loadShader(int type, String shaderCode){
+
         int shader = GL.glCreateShader(type);
         GL.glShaderSource(shader, shaderCode);
         GL.glCompileShader(shader);
         return shader;
-    }
-
-    public void define(String attributeName, boolean normalized, int stride, int offset) {
-        int indx = attributeLocation.get(attributeName);
-
-        /* -1 é não implementado */
-        int size = attributeType[indx] == GLES20.GL_FLOAT_VEC4 ? 4
-                : attributeType[indx] == GLES20.GL_FLOAT_VEC3 ? 3
-                : attributeType[indx] == GLES20.GL_FLOAT_VEC2 ? 2
-                : -1;
-        int type = attributeType[indx] == GLES20.GL_FLOAT_VEC4
-                | attributeType[indx] == GLES20.GL_FLOAT_VEC3
-                | attributeType[indx] == GLES20.GL_FLOAT_VEC2 ? GL.GL_FLOAT
-                : -1;
-
-        if(size == -1 | type == -1)
-            throw new RuntimeException("Tipo do attribute no vertex shader não implementado.");
-
-        GL.glVertexAttribPointer(indx, size, type, normalized, stride * size, offset * size);
-        GL.glEnableVertexAttribArray(attributeLocation.get(attributeName));
     }
 
     public ArrayList<GLAttribute> getAttributes() {
@@ -126,5 +132,44 @@ public class GLProgram {
 
     public int getIndex() {
         return index;
+    }
+
+    public void define() {
+
+        for (GLAttribute attribute :
+                attributes) {
+            int indx = attributeLocation.get(attribute.getName());
+
+            /* -1 é não implementado */
+            int size = attributeType[indx] == GLES20.GL_FLOAT_VEC4 ? 4
+                    : attributeType[indx] == GLES20.GL_FLOAT_VEC3 ? 3
+                    : attributeType[indx] == GLES20.GL_FLOAT_VEC2 ? 2
+                    : -1;
+            int type = attributeType[indx] == GLES20.GL_FLOAT_VEC4
+                    | attributeType[indx] == GLES20.GL_FLOAT_VEC3
+                    | attributeType[indx] == GLES20.GL_FLOAT_VEC2 ? GL.GL_FLOAT
+                    : -1;
+
+            if(size == -1 | type == -1)
+                throw new RuntimeException("Tipo do attribute no vertex shader não implementado.");
+
+            GL.glVertexAttribPointer(indx, size, type, attribute.getNormalized(),
+                    attribute.getStride() * size, attribute.getOffset() * size);
+
+            GL.glEnableVertexAttribArray(indx);
+        }
+        for (GLUniform uniform :
+                uniforms) {
+            int location = uniformLocation.get(uniform.getName());
+            if ((uniform.getName() != null) & (uniform.getArray() != null)
+                    & (uniform.getCount() >= 0) & (uniform.getOffset() >= 0)) {
+
+                GLES20.glUniform4fv(location, uniform.getCount(), uniform.getArray(),
+                        uniform.getOffset());
+            }
+            else {
+                throw new RuntimeException("Caso não implementado");
+            }
+        }
     }
 }

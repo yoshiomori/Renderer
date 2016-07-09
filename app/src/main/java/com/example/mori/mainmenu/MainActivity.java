@@ -25,6 +25,8 @@ public class MainActivity extends Activity{
         int arrayIndex = 0;
         ArrayList<GLAttribute> attributes = new ArrayList<>();
         attributes.add(new GLAttribute("vPosition", false, 0, 0));
+        ArrayList<GLUniform> uniforms = new ArrayList<>();
+        uniforms.add(new GLUniform("color", 1, new float[]{0.0f, 0.0f, 0.5f, 1.0f}, 0));
         String vertexShaderCode = "/* Vertex Shader */" +
                 "attribute vec2 vPosition;" +
                 "void main() {" +
@@ -33,14 +35,16 @@ public class MainActivity extends Activity{
                 "}";
         String fragmentShaderCode = "/* Fragment Shader */" +
                 "precision mediump float;" +
+                "uniform vec4 color;" +
                 "void main() {" +
-                "  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);" +
+                "  gl_FragColor = color;" +
                 "}";
         int mode = GL.GL_POINTS;
         int first = 0;
         int count = 1;
 
-        datas.add(new GLData(arrayIndex, attributes, vertexShaderCode, fragmentShaderCode, mode, first, count));
+        datas.add(new GLData(arrayIndex, attributes, uniforms, vertexShaderCode,
+                fragmentShaderCode, mode, first, count));
 
         int arrayIndex1 = 1;
         ArrayList<GLAttribute> attributes1 = new ArrayList<>();
@@ -54,19 +58,20 @@ public class MainActivity extends Activity{
         String fragmentShaderCode1 = "/* Fragment Shader */" +
                 "precision mediump float;" +
                 "void main() {" +
-                "  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);" +
+                "  gl_FragColor = vec4(0.0, 0.5, 0.0, 0.1);" +
                 "}";
         int mode1 = GL.GL_POINTS;
         int first1 = 0;
         int count1 = 2;
 
-        datas.add(new GLData(arrayIndex1, attributes1, vertexShaderCode1, fragmentShaderCode1, mode1, first1, count1));
+        datas.add(new GLData(arrayIndex1, attributes1, vertexShaderCode1,
+                fragmentShaderCode1, mode1, first1, count1));
 
 
 
         GLSurfaceView screen = new GLSurfaceView(this);
         screen.setEGLContextClientVersion(2);
-        screen.setRenderer(new MainMenu(arrayList, datas));
+        screen.setRenderer(new Renderer(arrayList, datas));
         screen.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         setContentView(screen);
     }

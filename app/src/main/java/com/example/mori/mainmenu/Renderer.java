@@ -1,5 +1,6 @@
 package com.example.mori.mainmenu;
 
+import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import javax.microedition.khronos.opengles.GL10;
  * Menu principal do app.
  * Created by mori on 06/07/16.
  */
-public class MainMenu implements GLSurfaceView.Renderer{
+public class Renderer implements GLSurfaceView.Renderer{
     // Dados brutos
     private ArrayList<GLData> datas;
     private ArrayList<GLArray> arrays = new ArrayList<>();
@@ -20,7 +21,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
     private GlBuffers buffers;
     private ArrayList<GLProgram> programs = new ArrayList<>();
 
-    public MainMenu(ArrayList<float[]> arrayList, ArrayList<GLData> datas) {
+    public Renderer(ArrayList<float[]> arrayList, ArrayList<GLData> datas) {
         this.datas = datas;
         this.buffers = null;
         for (float[] array :
@@ -42,7 +43,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
     private void loadShaderProgram() {
         for (GLData data:
                 datas) {
-            programs.add(new GLProgram(data.getIndex(), data.getAttributes(),
+            programs.add(new GLProgram(data.getIndex(), data.getAttributes(), data.getUniforms(),
                     data.getVertexShaderCode(), data.getFragmentShaderCode(), data.getMode(),
                     data.getFirst(), data.getCount()));
         }
@@ -61,11 +62,7 @@ public class MainMenu implements GLSurfaceView.Renderer{
                 programs) {
             program.use();
             buffers.bindArrayBuffer(program.getIndex());
-            for (GLAttribute attribute :
-                    program.getAttributes()) {
-                program.define(attribute.getName(), attribute.getNormalized(),
-                        attribute.getStride(), attribute.getOffset());
-            }
+            program.define();
             GL.glDrawArrays(program.getMode(), program.getFirst(), program.getCount());
         }
     }
