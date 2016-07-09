@@ -1,6 +1,5 @@
-package com.example.mori.mainmenu;
+package com.example.mori.renderer;
 
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
 import java.util.ArrayList;

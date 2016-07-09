@@ -1,4 +1,4 @@
-package com.example.mori.mainmenu;
+package com.example.mori.renderer;
 
 /**
  * Abstração de um array para a biblioteca gráfica.

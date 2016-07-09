@@ -1,4 +1,4 @@
-package com.example.mori.mainmenu;
+package com.example.mori.renderer;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
