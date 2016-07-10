@@ -42,7 +42,7 @@ public class Renderer implements GLSurfaceView.Renderer{
     private void loadShaderProgram() {
         for (GLData data:
                 datas) {
-            programs.add(new GLProgram(data.getIndex(), data.getAttributes(), data.getUniforms(),
+            programs.add(new GLProgram(data.getArrayIndex(), data.getAttributes(), data.getUniforms(),
                     data.getVertexShaderCode(), data.getFragmentShaderCode(), data.getMode(),
                     data.getFirst(), data.getCount()));
         }

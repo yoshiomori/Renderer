@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class GLData {
 
-    private final int arrayIndex;
+    private int arrayIndex;
     private final ArrayList<GLAttribute> attributes;
     private final ArrayList<GLUniform> uniforms;
     private final String fragmentShaderCode;
@@ -68,11 +68,15 @@ public class GLData {
         return count;
     }
 
-    public int getIndex() {
+    public int getArrayIndex() {
         return arrayIndex;
     }
 
     public ArrayList<GLUniform> getUniforms() {
         return uniforms;
+    }
+
+    public void setArrayIndex(int arrayIndex){
+        this.arrayIndex = arrayIndex;
     }
 }
