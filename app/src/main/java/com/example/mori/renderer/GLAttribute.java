@@ -5,10 +5,11 @@ package com.example.mori.renderer;
  * Created by mori on 09/07/16.
  */
 public class GLAttribute {
-    private String name;
-    private boolean normalized;
-    private int stride;
-    private int offset;
+    private final String name;
+    private final boolean normalized;
+    private final int stride;
+    private final int offset;
+    private final float[] arrays;
 
     /**
      * Construtor
@@ -22,22 +23,22 @@ public class GLAttribute {
         this.normalized = normalized;
         this.stride = stride;
         this.offset = offset;
+        this.arrays = null;
     }
 
-    public void setName(String name) {
+    /**
+     * Construtor
+     * @param name nome do atribute que receberá o array
+     * @param normalized Se true então o array será normalizado.
+     * @param stride quantidade de elementos no array a ser usado pelo attribute.
+     * @param arrays array sem buffer objects
+     */
+    public GLAttribute(String name, boolean normalized, int stride, float[] arrays) {
         this.name = name;
-    }
-
-    public void setNormalized(boolean normalized) {
         this.normalized = normalized;
-    }
-
-    public void setStride(int stride) {
         this.stride = stride;
-    }
-
-    public void setOffset(int offset) {
-        this.offset = offset;
+        this.arrays = arrays;
+        this.offset = -1;
     }
 
     public String getName() {
@@ -54,5 +55,9 @@ public class GLAttribute {
 
     public int getOffset() {
         return offset;
+    }
+
+    public float[] getArrays() {
+        return arrays;
     }
 }

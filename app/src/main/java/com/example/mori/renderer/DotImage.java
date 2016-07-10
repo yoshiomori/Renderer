@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Abstração de imagem de ponto.
+ * Demostração de atribuir dados à uniform.
  * Created by mori on 09/07/16.
  */
 public class DotImage extends GLImage {

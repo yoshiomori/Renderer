@@ -3,20 +3,20 @@ package com.example.mori.renderer;
 import java.util.ArrayList;
 
 /**
- * Abstração de imagem de retângulo
+ * Demostração de como usar o array buffer object
  * Created by mori on 09/07/16.
  */
-public class RetangleImage extends GLImage {
+public class DoisPontos extends GLImage {
 
     private ArrayList<GLData> datas;
     private ArrayList<float[]> arrays;
 
-    public RetangleImage(){
+    public DoisPontos(){
         datas = new ArrayList<>();
-        arrays = new ArrayList<>();
+        arrays = new ArrayList<>();  // Usando o array buffer object
         ArrayList<GLAttribute> attributes = new ArrayList<>();
 
-        arrays.add(new float[]{-0.5f, 0.0f, 0.5f, 0.5f});
+        arrays.add(new float[]{-0.5f, 0.0f, 0.5f, 0.5f}); // Adicionando elemento no array buffer
         attributes.add(new GLAttribute("vPosition", false, 0, 0));
         addData(datas,
                 0,

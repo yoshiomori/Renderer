@@ -2,7 +2,6 @@ package com.example.mori.renderer;
 
 
 import android.app.Activity;
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
@@ -16,7 +15,8 @@ public class MainActivity extends Activity{
 
 
         ArrayList<GLImage> images = new ArrayList<>();
-        images.add(new RetangleImage());
+        images.add(new TrianglesImage());
+        images.add(new DoisPontos());
         images.add(new DotImage());
 
         ArrayList<float[]> arrays = new ArrayList<>();
@@ -29,7 +29,10 @@ public class MainActivity extends Activity{
                     image.getDatas()) {
                 data.setArrayIndex(data.getArrayIndex() + arrays.size());
             }
-            arrays.addAll(image.getArrays());
+            if (image.getArrays() != null)
+                arrays.addAll(image.getArrays());
+            if (image.getDatas() == null)
+                throw new RuntimeException("getDatas retornando null");
             datas.addAll(image.getDatas());
         }
 

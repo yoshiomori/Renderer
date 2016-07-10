@@ -29,7 +29,7 @@ public class GlBuffers {
         }
     }
 
-    private ShortBuffer adaptShortArray(short[] shortArray) {
+    public static ShortBuffer adaptShortArray(short[] shortArray) {
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(shortArray.length * Float.SIZE);
         byteBuffer.order(ByteOrder.nativeOrder());
         ShortBuffer floatBuffer = byteBuffer.asShortBuffer();
@@ -38,7 +38,7 @@ public class GlBuffers {
         return floatBuffer;
     }
 
-    private FloatBuffer adaptFloatArray(float[] floatArray) {
+    public static FloatBuffer adaptFloatArray(float[] floatArray) {
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(floatArray.length * Float.SIZE);
         byteBuffer.order(ByteOrder.nativeOrder());
         FloatBuffer floatBuffer = byteBuffer.asFloatBuffer();
@@ -47,7 +47,7 @@ public class GlBuffers {
         return floatBuffer;
     }
 
-    public void bindArrayBuffer(int index) {
-        GL.glBindBuffer(GL.GL_ARRAY_BUFFER, buffers[index]);
+    public void bindArrayBuffer(int arrayIndex) {
+        GL.glBindBuffer(GL.GL_ARRAY_BUFFER, arrayIndex >= 0 ? buffers[arrayIndex] : 0);
     }
 }

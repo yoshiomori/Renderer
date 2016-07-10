@@ -20,8 +20,15 @@ public abstract class GLImage {
                            String vertexShaderCode, String fragmentShaderCode, int mode, int first,
                            int count) {
 
-        datas.add(new GLData(arrayIndex, attributes, uniforms, vertexShaderCode, fragmentShaderCode, mode,
-                first, count));
+        datas.add(new GLData(arrayIndex, attributes, uniforms, vertexShaderCode, fragmentShaderCode,
+                mode, first, count));
+    }
+
+    protected void addData(ArrayList<GLData> datas, ArrayList<GLAttribute> attributes,
+                           String vertexShaderCode, String fragmentShaderCode, int mode, int first,
+                           int count) {
+
+        datas.add(new GLData(attributes, vertexShaderCode, fragmentShaderCode, mode, first, count));
     }
 
     public abstract ArrayList<GLData> getDatas();

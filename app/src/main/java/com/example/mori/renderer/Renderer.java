@@ -60,7 +60,7 @@ public class Renderer implements GLSurfaceView.Renderer{
         for (GLProgram program :
                 programs) {
             program.use();
-            buffers.bindArrayBuffer(program.getIndex());
+            buffers.bindArrayBuffer(program.getArrayIndex());
             program.define();
             GL.glDrawArrays(program.getMode(), program.getFirst(), program.getCount());
         }

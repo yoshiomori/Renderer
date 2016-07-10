@@ -44,6 +44,19 @@ public class GLData {
         this.count = count;
     }
 
+    public GLData(ArrayList<GLAttribute> attributes, String vertexShaderCode, String fragmentShaderCode, int mode, int first, int count) {
+
+        this.arrayIndex = -1;
+        this.attributes = attributes;
+        this.uniforms = new ArrayList<>();
+        this.vertexShaderCode = vertexShaderCode;
+        this.fragmentShaderCode = fragmentShaderCode;
+        this.mode = mode;
+        this.first = first;
+        this.count = count;
+
+    }
+
     public String getFragmentShaderCode() {
         return fragmentShaderCode;
     }

@@ -16,6 +16,7 @@ public class GL extends ErrorCondition{
     public static final int GL_ACTIVE_ATTRIBUTES = GLES20.GL_ACTIVE_ATTRIBUTES;
     public static final int GL_STATIC_DRAW = GLES20.GL_STATIC_DRAW;
     public static final int GL_POINTS = GLES20.GL_POINTS;
+    public static final int GL_TRIANGLES = GLES20.GL_TRIANGLES;
 
     public static int glCreateProgram() {
         int program = GLES20.glCreateProgram();
@@ -88,6 +89,12 @@ public class GL extends ErrorCondition{
     public static void glVertexAttribPointer(int indx, int size, int type, boolean normalized,
                                              int stride, int offset) {
         GLES20.glVertexAttribPointer(indx, size, type, normalized, stride, offset);
+        checkGlError("glVertexAttribPointer");
+    }
+
+    public static void glVertexAttribPointer(int indx, int size, int type, boolean normalized,
+                                             int stride, Buffer ptr) {
+        GLES20.glVertexAttribPointer(indx, size, type, normalized, stride, ptr);
         checkGlError("glVertexAttribPointer");
     }
 

@@ -10,36 +10,39 @@ import java.util.HashMap;
  * Created by mori on 09/07/16.
  */
 public class GLProgram {
+
+    private final int arrayIndex;
+    private final ArrayList<GLAttribute> attributes;
     private final ArrayList<GLUniform> uniforms;
     private final int mode;
     private final int first;
     private final int count;
+
     private int program;
-    private final int[] programInfo = new int[6];
+    private final int[] programInfo;
+    private HashMap<String, Integer> attributeLocation;
+    private HashMap<String, Integer> uniformLocation;
+    private int[] attributeType;
+
     public final int GL_ACTIVE_ATTRIBUTES = 0;
     public final int GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = 1;
     public final int GL_ACTIVE_UNIFORMS = 2;
     public final int GL_ACTIVE_UNIFORM_MAX_LENGTH = 3;
     public final int GL_LINK_STATUS = 4;
     public final int GL_ATTACHED_SHADERS = 5;
-    private HashMap<String, Integer> attributeLocation;
-    private HashMap<String, Integer> uniformLocation;
-    private int[] attributeType;
-    private final int index;
-    private final ArrayList<GLAttribute> attributes;
-    private int[] uniformType;
 
 
-    public GLProgram(int index, ArrayList<GLAttribute> attributes, ArrayList<GLUniform> uniforms,
+    public GLProgram(int arrayIndex, ArrayList<GLAttribute> attributes, ArrayList<GLUniform> uniforms,
                      String vertexShaderCode, String fragmentShaderCode, int mode, int first,
                      int count) {
 
-        this.index = index;
+        this.arrayIndex = arrayIndex;
         this.attributes = attributes;
         this.uniforms = uniforms;
         this.mode = mode;
         this.first = first;
         this.count = count;
+        this.programInfo = new int[6];  /* 6 é o número de MACROS */
 
         initProgram(vertexShaderCode, fragmentShaderCode);
         initProgramInfo();
@@ -56,10 +59,10 @@ public class GLProgram {
         byte[] name = new byte[programInfo[GL_ACTIVE_UNIFORM_MAX_LENGTH]];
         int[] length = new int[1];
         int[] size = new int[1];
-        uniformType = new int[programInfo[GL_ACTIVE_UNIFORMS]];
+        int[] uniformType = new int[1];
         uniformLocation = new HashMap<>(programInfo[GL_ACTIVE_UNIFORMS]);
         for (int index = 0; index < programInfo[GL_ACTIVE_UNIFORMS]; index++) {
-            GL.glGetActiveUniform(program, index, name.length, length, 0, size, 0, attributeType,
+            GL.glGetActiveUniform(program, index, name.length, length, 0, size, 0, uniformType,
                     index, name, 0);
             uniformLocation.put(new String(name, 0, length[0]), index);
         }
@@ -110,10 +113,6 @@ public class GLProgram {
         return shader;
     }
 
-    public ArrayList<GLAttribute> getAttributes() {
-        return attributes;
-    }
-
     public void use() {
         GL.glUseProgram(program);
     }
@@ -130,8 +129,8 @@ public class GLProgram {
         return count;
     }
 
-    public int getIndex() {
-        return index;
+    public int getArrayIndex() {
+        return arrayIndex;
     }
 
     public void define() {
@@ -150,11 +149,25 @@ public class GLProgram {
                     | attributeType[indx] == GLES20.GL_FLOAT_VEC2 ? GL.GL_FLOAT
                     : -1;
 
-            if(size == -1 | type == -1)
+            if (size == -1 | type == -1)
                 throw new RuntimeException("Tipo do attribute no vertex shader não implementado.");
 
-            GL.glVertexAttribPointer(indx, size, type, attribute.getNormalized(),
-                    attribute.getStride() * size, attribute.getOffset() * size);
+            if (attribute.getOffset() >= 0) {
+
+                GL.glVertexAttribPointer(indx, size, type, attribute.getNormalized(),
+                        attribute.getStride() * size, attribute.getOffset() * size);
+
+            }
+            else if (attribute.getArrays() != null) {
+
+                GL.glVertexAttribPointer(indx, size, type, attribute.getNormalized(),
+                        attribute.getStride() * size,
+                        GlBuffers.adaptFloatArray(attribute.getArrays()));
+
+            } else {
+                throw new RuntimeException("Attribute não inicializado");
+            }
+
 
             GL.glEnableVertexAttribArray(indx);
         }
