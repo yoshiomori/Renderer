@@ -19,7 +19,7 @@ public class MainActivity extends Activity{
         images.add(new DoisPontos());
         images.add(new DotImage());
 
-        ArrayList<float[]> arrays = new ArrayList<>();
+        ArrayList<GLArray> arrays = new ArrayList<>();
 
         ArrayList<GLData> datas = new ArrayList<>();
 

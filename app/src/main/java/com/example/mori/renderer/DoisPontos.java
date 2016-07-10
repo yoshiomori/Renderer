@@ -9,14 +9,14 @@ import java.util.ArrayList;
 public class DoisPontos extends GLImage {
 
     private ArrayList<GLData> datas;
-    private ArrayList<float[]> arrays;
+    private ArrayList<GLArray> arrays;
 
     public DoisPontos(){
         datas = new ArrayList<>();
         arrays = new ArrayList<>();  // Usando o array buffer object
         ArrayList<GLAttribute> attributes = new ArrayList<>();
 
-        arrays.add(new float[]{-0.5f, 0.0f, 0.5f, 0.5f}); // Adicionando elemento no array buffer
+        arrays.add(new GLArray(new float[]{-0.5f, 0.0f, 0.5f, 0.5f})); // Adicionando elemento no array buffer
         attributes.add(new GLAttribute("vPosition", false, 0, 0));
         addData(datas,
                 0,
@@ -41,7 +41,7 @@ public class DoisPontos extends GLImage {
     }
 
     @Override
-    public ArrayList<float[]> getArrays() {
+    public ArrayList<GLArray> getArrays() {
         return arrays;
     }
 }

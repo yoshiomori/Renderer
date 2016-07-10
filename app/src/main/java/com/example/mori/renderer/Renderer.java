@@ -20,13 +20,10 @@ public class Renderer implements GLSurfaceView.Renderer{
     private GlBuffers buffers;
     private ArrayList<GLProgram> programs = new ArrayList<>();
 
-    public Renderer(ArrayList<float[]> arrayList, ArrayList<GLData> datas) {
+    public Renderer(ArrayList<GLArray> arrays, ArrayList<GLData> datas) {
         this.datas = datas;
         this.buffers = null;
-        for (float[] array :
-                arrayList) {
-            arrays.add(new GLArray(array));
-        }
+        this.arrays = arrays;
     }
 
     @Override

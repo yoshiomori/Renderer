@@ -33,5 +33,5 @@ public abstract class GLImage {
 
     public abstract ArrayList<GLData> getDatas();
 
-    public abstract ArrayList<float[]> getArrays();
+    public abstract ArrayList<GLArray> getArrays();
 }

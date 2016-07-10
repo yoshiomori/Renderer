@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class DotImage extends GLImage {
     private ArrayList<GLData> datas;
-    private ArrayList<float[]> arrays;
+    private ArrayList<GLArray> arrays;
 
     public DotImage(){
 
@@ -18,7 +18,7 @@ public class DotImage extends GLImage {
         ArrayList<GLAttribute> attributes = new ArrayList<>();
         ArrayList<GLUniform> uniforms = new ArrayList<>();
 
-        arrays.add(new float[]{0.0f, 0.5f});
+        arrays.add(new GLArray(new float[]{0.0f, 0.5f}));
         attributes.add(new GLAttribute("vPosition", false, 0, 0));
         uniforms.add(new GLUniform("color", 1, new float[]{0.5f, 0.0f, 0.5f, 0.1f}, 0));
         addData(datas,
@@ -46,7 +46,7 @@ public class DotImage extends GLImage {
     }
 
     @Override
-    public ArrayList<float[]> getArrays() {
+    public ArrayList<GLArray> getArrays() {
         return arrays;
     }
 }

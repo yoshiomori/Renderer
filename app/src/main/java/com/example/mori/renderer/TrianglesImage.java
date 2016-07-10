@@ -36,7 +36,7 @@ public class TrianglesImage extends GLImage {
     }
 
     @Override
-    public ArrayList<float[]> getArrays() {
+    public ArrayList<GLArray> getArrays() {
         return null;
     }
 }
