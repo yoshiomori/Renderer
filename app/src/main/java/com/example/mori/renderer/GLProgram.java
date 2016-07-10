@@ -113,27 +113,7 @@ public class GLProgram {
         return shader;
     }
 
-    public void use() {
-        GL.glUseProgram(program);
-    }
-
-    public int getMode() {
-        return mode;
-    }
-
-    public int getFirst() {
-        return first;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public int getArrayIndex() {
-        return arrayIndex;
-    }
-
-    public void define() {
+    private void define() {
 
         for (GLAttribute attribute :
                 attributes) {
@@ -184,5 +164,12 @@ public class GLProgram {
                 throw new RuntimeException("Caso não implementado");
             }
         }
+    }
+
+    public void render(GlBuffers buffers) {
+        GL.glUseProgram(program);
+        buffers.bindArrayBuffer(arrayIndex);
+        define();
+        GL.glDrawArrays(mode, first, count);
     }
 }
