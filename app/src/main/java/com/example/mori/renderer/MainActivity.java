@@ -17,6 +17,7 @@ public class MainActivity extends Activity{
                 new DotImage(),
                 new TrianglesImage(),
                 new DoisPontos(),
+                new SquareBlueImage(),
                 new SquareImage()));
         screen.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         setContentView(screen);

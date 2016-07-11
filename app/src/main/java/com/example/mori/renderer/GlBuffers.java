@@ -55,4 +55,12 @@ public class GlBuffers {
     public void bindArrayBuffer(int arrayIndex) {
         GL.glBindBuffer(GLES20.GL_ARRAY_BUFFER, arrayIndex >= 0 ? buffers[arrayIndex] : 0);
     }
+
+    public void bindElementArrayBuffer(int elementArrayIndex) {
+        GL.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, buffers[elementArrayIndex]);
+    }
+
+    public void unbindElementArrayBuffer() {
+        GL.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
 }

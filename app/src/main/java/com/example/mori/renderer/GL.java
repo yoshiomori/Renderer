@@ -127,6 +127,11 @@ public class GL{
         checkGlError("glDrawElements");
     }
 
+    public static void glDrawElements(int mode, int count, int type, int offset) {
+        GLES20.glDrawElements(mode, count, type, offset);
+        checkGlError("glDrawElements");
+    }
+
     public static void glUniform4fv(int location, int count, float[] array, int offset) {
         GLES20.glUniform4fv(location, count, array, offset);
         checkGlError("glUniform4fv");

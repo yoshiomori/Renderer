@@ -33,12 +33,17 @@ public abstract class GLImage {
         this.array = array;
     }
 
-    protected void setArray(float[] array, short[] elementArray){
-        assert array != null & elementArray != null;
-        this.array = array;
+    protected void setElementArray(short[] elementArray) {
+        assert elementArray != null;
         this.elementArray = elementArray;
     }
 
+    /**
+     * Quando o element array buffer é declarado, o argumento first é usado como offset
+     * @param mode modo de desenho
+     * @param first ou offset, quando element array buffer é declarado
+     * @param count número de vértices a ser desenhado.
+     */
     protected void setDraw(int mode, int first, int count) {
         this.mode = mode;
         this.first = first;
@@ -231,6 +236,11 @@ public abstract class GLImage {
         define();
         if (first == -1 & indices != null)
             GL.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, indices);
+        else if (first >= 0 & indices == null & elementArrayIndex >= 0){
+            buffers.bindElementArrayBuffer(elementArrayIndex);
+            GL.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, first);
+            buffers.unbindElementArrayBuffer();
+        }
         else
             GL.glDrawArrays(mode, first, count);
     }
