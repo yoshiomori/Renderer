@@ -160,7 +160,7 @@ public class GLProgram {
             if ((uniform.getName() != null) & (uniform.getArray() != null)
                     & (uniform.getCount() >= 0) & (uniform.getOffset() >= 0)) {
 
-                GLES20.glUniform4fv(location, uniform.getCount(), uniform.getArray(),
+                GL.glUniform4fv(location, uniform.getCount(), uniform.getArray(),
                         uniform.getOffset());
             }
             else {
@@ -174,7 +174,7 @@ public class GLProgram {
         buffers.bindArrayBuffer(arrayIndex);
         define();
         if (first == -1 & indices != null)
-            GLES20.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, indices);
+            GL.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, indices);
         else
             GL.glDrawArrays(mode, first, count);
     }

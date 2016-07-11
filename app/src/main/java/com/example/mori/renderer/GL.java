@@ -121,4 +121,14 @@ public class GL{
                 type, typeOffset, name, nameOffset);
         checkGlError("glGetActiveAttrib");
     }
+
+    public static void glDrawElements(int mode, int count, int type, Buffer indices) {
+        GLES20.glDrawElements(mode, count, type, indices);
+        checkGlError("glDrawElements");
+    }
+
+    public static void glUniform4fv(int location, int count, float[] array, int offset) {
+        GLES20.glUniform4fv(location, count, array, offset);
+        checkGlError("glUniform4fv");
+    }
 }
