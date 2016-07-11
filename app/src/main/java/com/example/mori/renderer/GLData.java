@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class GLData {
 
-    private int arrayIndex;
+    private int arrayIndex = -1;
     private final ArrayList<GLAttribute> attributes;
     private final ArrayList<GLUniform> uniforms;
     private final String fragmentShaderCode;
@@ -17,10 +17,9 @@ public class GLData {
     private final int first;
     private final int count;
 
-    public GLData(int arrayIndex, ArrayList<GLAttribute> attributes, String vertexShaderCode,
+    public GLData(ArrayList<GLAttribute> attributes, String vertexShaderCode,
                   String fragmentShaderCode, int mode, int first, int count) {
 
-        this.arrayIndex = arrayIndex;
         this.attributes = attributes;
         uniforms = new ArrayList<>();
         this.fragmentShaderCode = fragmentShaderCode;
@@ -30,11 +29,10 @@ public class GLData {
         this.count = count;
     }
 
-    public GLData(int arrayIndex, ArrayList<GLAttribute> attributes, ArrayList<GLUniform> uniforms,
+    public GLData(ArrayList<GLAttribute> attributes, ArrayList<GLUniform> uniforms,
                   String vertexShaderCode, String fragmentShaderCode, int mode, int first,
                   int count) {
 
-        this.arrayIndex = arrayIndex;
         this.attributes = attributes;
         this.uniforms = uniforms;
         this.vertexShaderCode = vertexShaderCode;
@@ -42,19 +40,6 @@ public class GLData {
         this.mode = mode;
         this.first = first;
         this.count = count;
-    }
-
-    public GLData(ArrayList<GLAttribute> attributes, String vertexShaderCode, String fragmentShaderCode, int mode, int first, int count) {
-
-        this.arrayIndex = -1;
-        this.attributes = attributes;
-        this.uniforms = new ArrayList<>();
-        this.vertexShaderCode = vertexShaderCode;
-        this.fragmentShaderCode = fragmentShaderCode;
-        this.mode = mode;
-        this.first = first;
-        this.count = count;
-
     }
 
     public String getFragmentShaderCode() {
