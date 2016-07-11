@@ -1,19 +1,13 @@
 package com.example.mori.renderer;
 
-import java.util.ArrayList;
-
 /**
  * Demostração de como usar o array buffer object
  * Created by mori on 09/07/16.
  */
 public class DoisPontos extends GLImage {
     public DoisPontos(){
-        arrays = new ArrayList<>();  // Usando o array buffer object
-        ArrayList<GLAttribute> attributes = new ArrayList<>();
-
-        arrays.add(new GLArray(new float[]{-0.5f, 0.0f, 0.5f, 0.5f})); // Adicionando elemento no array buffer
-        attributes.add(new GLAttribute("vPosition", false, 0, 0));
-        addData(attributes,
+        setArray(new float[]{-0.5f, 0.0f, 0.5f, 0.5f});
+        setShader(
                 "/* Vertex Shader */" +
                         "attribute vec2 vPosition;" +
                         "void main() {" +
@@ -25,6 +19,8 @@ public class DoisPontos extends GLImage {
                         "void main() {" +
                         "  gl_FragColor = vec4(1.0, 0.0, 0.0, 0.1);" +
                         "}",
-                GL.GL_POINTS, 0, 2);
+                new GLAttribute("vPosition", false, 0, 0)
+        );
+        setDraw(GL.GL_POINTS, 0, 2);
     }
 }

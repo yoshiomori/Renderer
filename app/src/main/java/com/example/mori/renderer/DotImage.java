@@ -1,7 +1,5 @@
 package com.example.mori.renderer;
 
-import java.util.ArrayList;
-
 /**
  * Abstração de imagem de ponto.
  * Demostração de atribuir dados à uniform.
@@ -9,15 +7,9 @@ import java.util.ArrayList;
  */
 public class DotImage extends GLImage {
     public DotImage(){
-        arrays = new ArrayList<>();
-        ArrayList<GLAttribute> attributes = new ArrayList<>();
-        ArrayList<GLUniform> uniforms = new ArrayList<>();
-
-        arrays.add(new GLArray(new float[]{0.0f, 0.5f}));
-        attributes.add(new GLAttribute("vPosition", false, 0, 0));
-        uniforms.add(new GLUniform("color", 1, new float[]{0.5f, 0.0f, 0.5f, 0.1f}, 0));
-        addData(attributes,
-                uniforms,
+        setArray(new float[]{0.0f, 0.5f});
+        setUniforms(new GLUniform("color", 1, new float[]{0.5f, 0.0f, 0.5f, 0.1f}, 0));
+        setShader(
                 "/* Vertex Shader */" +
                         "attribute vec2 vPosition;" +
                         "void main() {" +
@@ -30,6 +22,7 @@ public class DotImage extends GLImage {
                         "void main() {" +
                         "  gl_FragColor = color;" +
                         "}",
-                GL.GL_POINTS, 0, 1);
+                new GLAttribute("vPosition", false, 0, 0));
+        setDraw(GL.GL_POINTS, 0, 1);
     }
 }

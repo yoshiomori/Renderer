@@ -2,8 +2,6 @@ package com.example.mori.renderer;
 
 import android.opengl.GLSurfaceView;
 
-import java.util.ArrayList;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -13,17 +11,16 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class Renderer implements GLSurfaceView.Renderer{
     // Dados brutos
-    private ArrayList<GLData> datas;
-    private ArrayList<GLArray> arrays = new ArrayList<>();
+    private GLImage[] images;
+    private int bufferSize;
 
     // Dados processados
     private GlBuffers buffers;
-    private ArrayList<GLProgram> programs = new ArrayList<>();
 
-    public Renderer(ArrayList<GLArray> arrays, ArrayList<GLData> datas) {
-        this.datas = datas;
+    public Renderer(GLImage[] images, int bufferSize) {
+        this.images = images;
+        this.bufferSize = bufferSize;
         this.buffers = null;
-        this.arrays = arrays;
     }
 
     @Override
@@ -33,15 +30,13 @@ public class Renderer implements GLSurfaceView.Renderer{
     }
 
     private void loadBuffers() {
-        buffers = new GlBuffers(arrays);
+        buffers = new GlBuffers(images, bufferSize);
     }
 
     private void loadShaderProgram() {
-        for (GLData data:
-                datas) {
-            programs.add(new GLProgram(data.getArrayIndex(), data.getAttributes(),
-                    data.getUniforms(), data.getVertexShaderCode(), data.getFragmentShaderCode(),
-                    data.getMode(), data.getFirst(), data.getCount(), data.getIndices()));
+        for (GLImage image:
+                images) {
+            image.initProgram();
         }
     }
 
@@ -54,9 +49,8 @@ public class Renderer implements GLSurfaceView.Renderer{
     public void onDrawFrame(GL10 gl) {
         GL.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-        for (GLProgram program :
-                programs) {
-            program.render(buffers);
+        for (GLImage image : images) {
+            image.render(buffers);
         }
     }
 }

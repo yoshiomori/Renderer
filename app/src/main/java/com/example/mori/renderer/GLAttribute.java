@@ -11,7 +11,7 @@ public class GLAttribute {
     private final boolean normalized;
     private final int stride;
     private final int offset;
-    private final GLArray array;
+    private final Buffer array;
 
     /**
      * Construtor
@@ -39,7 +39,7 @@ public class GLAttribute {
         this.name = name;
         this.normalized = normalized;
         this.stride = stride;
-        this.array = new GLArray(array);
+        this.array = GlBuffers.adapt(array);
         this.offset = -1;
     }
 
@@ -60,6 +60,6 @@ public class GLAttribute {
     }
 
     public Buffer getArray() {
-        return array != null ? array.getArray() : null;
+        return array;
     }
 }
