@@ -11,32 +11,13 @@ public class MainActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        GLImage[] images = new GLImage[]{
+        GLSurfaceView screen = new GLSurfaceView(this);
+        screen.setEGLContextClientVersion(2);
+        screen.setRenderer(new Renderer(
                 new DotImage(),
                 new TrianglesImage(),
                 new DoisPontos(),
-                new SquareImage(),
-        };
-
-        int bufferSize = 0;
-        for (GLImage image :
-                images) {
-            if (image.getArray() != null) {
-                image.setArrayIndex(bufferSize++);
-            }
-            if (image.getElementArray() != null) {
-                image.setElementArrayIndex(bufferSize++);
-            }
-            if (image.getVertexShaderCode() == null | image.getFragmentShaderCode() == null
-                    | image.getAttributes() == null) {
-                throw new RuntimeException("Shader deve ser configurado. " +
-                        "Utilize o método setShader da class GLImage!");
-            }
-        }
-
-        GLSurfaceView screen = new GLSurfaceView(this);
-        screen.setEGLContextClientVersion(2);
-        screen.setRenderer(new Renderer(images, bufferSize));
+                new SquareImage()));
         screen.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         setContentView(screen);
     }
