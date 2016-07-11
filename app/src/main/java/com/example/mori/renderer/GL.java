@@ -1,6 +1,7 @@
 package com.example.mori.renderer;
 
 import android.opengl.GLES20;
+import android.util.Log;
 
 import java.nio.Buffer;
 
@@ -8,15 +9,18 @@ import java.nio.Buffer;
  * GLES20 com check error
  * Created by mori on 06/07/16.
  */
-public class GL extends ErrorCondition{
-    public static final int GL_ARRAY_BUFFER = GLES20.GL_ARRAY_BUFFER;
-    public static final int GL_FLOAT = GLES20.GL_FLOAT;
-    public static final int GL_VERTEX_SHADER = GLES20.GL_VERTEX_SHADER;
-    public static final int GL_FRAGMENT_SHADER = GLES20.GL_FRAGMENT_SHADER;
-    public static final int GL_ACTIVE_ATTRIBUTES = GLES20.GL_ACTIVE_ATTRIBUTES;
-    public static final int GL_STATIC_DRAW = GLES20.GL_STATIC_DRAW;
+public class GL{
     public static final int GL_POINTS = GLES20.GL_POINTS;
     public static final int GL_TRIANGLES = GLES20.GL_TRIANGLES;
+
+    private static void checkGlError(String glOperation) {
+        int error;
+        //noinspection LoopStatementThatDoesntLoop
+        while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR){
+            Log.e("GL", glOperation + ": glError " + error);
+            throw new RuntimeException(glOperation + ": glError " + error);
+        }
+    }
 
     public static int glCreateProgram() {
         int program = GLES20.glCreateProgram();
@@ -95,11 +99,6 @@ public class GL extends ErrorCondition{
     public static void glDrawArrays(int mode, int first, int count) {
         GLES20.glDrawArrays(mode, first, count);
         checkGlError("glDrawArrays");
-    }
-
-    private static void checkGlError(String glOperation) {
-        int error = GLES20.glGetError();
-        e(error != GLES20.GL_NO_ERROR, "Gl", glOperation + ": glError " + error);
     }
 
     public static void glGetProgramiv(int program, int pname, int[] params, int offset) {

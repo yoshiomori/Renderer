@@ -86,7 +86,7 @@ public class GLProgram {
 
     private void initProgramInfo() {
 
-        GL.glGetProgramiv(program, GL.GL_ACTIVE_ATTRIBUTES, programInfo, GL_ACTIVE_ATTRIBUTES);
+        GL.glGetProgramiv(program, GLES20.GL_ACTIVE_ATTRIBUTES, programInfo, GL_ACTIVE_ATTRIBUTES);
         GL.glGetProgramiv(program, GLES20.GL_ACTIVE_ATTRIBUTE_MAX_LENGTH,
                 programInfo, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH);
         GL.glGetProgramiv(program, GLES20.GL_ACTIVE_UNIFORMS, programInfo, GL_ACTIVE_UNIFORMS);
@@ -103,8 +103,8 @@ public class GLProgram {
         program = GL.glCreateProgram();
         if (program == 0)
             throw new RuntimeException("Falha ao criar o programa");
-        GL.glAttachShader(program, loadShader(GL.GL_VERTEX_SHADER, vertexShader));
-        GL.glAttachShader(program, loadShader(GL.GL_FRAGMENT_SHADER, fragmentShader));
+        GL.glAttachShader(program, loadShader(GLES20.GL_VERTEX_SHADER, vertexShader));
+        GL.glAttachShader(program, loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShader));
         GL.glLinkProgram(program);
     }
 
@@ -129,7 +129,7 @@ public class GLProgram {
                     : -1;
             int type = attributeType[indx] == GLES20.GL_FLOAT_VEC4
                     | attributeType[indx] == GLES20.GL_FLOAT_VEC3
-                    | attributeType[indx] == GLES20.GL_FLOAT_VEC2 ? GL.GL_FLOAT
+                    | attributeType[indx] == GLES20.GL_FLOAT_VEC2 ? GLES20.GL_FLOAT
                     : -1;
 
             if (size == -1 | type == -1)
