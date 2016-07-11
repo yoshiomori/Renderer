@@ -25,9 +25,10 @@ public class MainActivity extends Activity{
 
         for (GLImage image :
                 images) {
-            image.getData().setArrayIndex(arrays.size());
-            if (image.getArrays() != null)
+            if (image.getArrays() != null) {
+                image.getData().setArrayIndex(arrays.size());
                 arrays.addAll(image.getArrays());
+            }
             if (image.getData() == null)
                 throw new RuntimeException("getData retornando null");
             datas.add(image.getData());
