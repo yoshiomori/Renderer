@@ -15,8 +15,8 @@ public class MainActivity extends Activity{
 
 
         ArrayList<GLImage> images = new ArrayList<>();
-        images.add(new TrianglesImage());
         images.add(new DoisPontos());
+        images.add(new TrianglesImage());
         images.add(new DotImage());
 
         ArrayList<GLArray> arrays = new ArrayList<>();
@@ -25,15 +25,12 @@ public class MainActivity extends Activity{
 
         for (GLImage image :
                 images) {
-            for (GLData data :
-                    image.getDatas()) {
-                data.setArrayIndex(data.getArrayIndex() + arrays.size());
-            }
+            image.getData().setArrayIndex(arrays.size());
             if (image.getArrays() != null)
                 arrays.addAll(image.getArrays());
-            if (image.getDatas() == null)
-                throw new RuntimeException("getDatas retornando null");
-            datas.addAll(image.getDatas());
+            if (image.getData() == null)
+                throw new RuntimeException("getData retornando null");
+            datas.add(image.getData());
         }
 
         GLSurfaceView screen = new GLSurfaceView(this);
