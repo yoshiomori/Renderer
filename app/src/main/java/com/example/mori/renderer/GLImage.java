@@ -176,8 +176,23 @@ public abstract class GLImage {
         }
     }
 
-    private void define() {
+    public void render(GlBuffers buffers) {
+        GL.glUseProgram(program);
+        buffers.bindArrayBuffer(arrayIndex);
+        defineAttributes();
+        defineUniforms();
+        if (first == -1 & indices != null)
+            GL.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, indices);
+        else if (first >= 0 & indices == null & elementArrayIndex >= 0){
+            buffers.bindElementArrayBuffer(elementArrayIndex);
+            GL.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, first);
+            buffers.unbindElementArrayBuffer();
+        }
+        else
+            GL.glDrawArrays(mode, first, count);
+    }
 
+    private void defineAttributes() {
         for (GLAttribute attribute :
                 attributes) {
             int indx = attributeLocation.get(attribute.getName());
@@ -214,6 +229,9 @@ public abstract class GLImage {
 
             GL.glEnableVertexAttribArray(indx);
         }
+    }
+
+    private void defineUniforms() {
         if (uniforms != null)
             for (GLUniform uniform :
                     uniforms) {
@@ -228,20 +246,5 @@ public abstract class GLImage {
                     throw new RuntimeException("Caso não implementado");
                 }
             }
-    }
-
-    public void render(GlBuffers buffers) {
-        GL.glUseProgram(program);
-        buffers.bindArrayBuffer(arrayIndex);
-        define();
-        if (first == -1 & indices != null)
-            GL.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, indices);
-        else if (first >= 0 & indices == null & elementArrayIndex >= 0){
-            buffers.bindElementArrayBuffer(elementArrayIndex);
-            GL.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, first);
-            buffers.unbindElementArrayBuffer();
-        }
-        else
-            GL.glDrawArrays(mode, first, count);
     }
 }
