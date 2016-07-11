@@ -75,12 +75,6 @@ public class GL extends ErrorCondition{
         checkGlError("glUseProgram");
     }
 
-    public static int glGetAttribLocation(int program, String name) {
-        int attribLocation = GLES20.glGetAttribLocation(program, name);
-        checkGlError("glGetAttribLocation");
-        return attribLocation;
-    }
-
     public static void glEnableVertexAttribArray(int index) {
         GLES20.glEnableVertexAttribArray(index);
         checkGlError("glEnableVertexAttribArray");

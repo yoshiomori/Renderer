@@ -2,6 +2,7 @@ package com.example.mori.renderer;
 
 import android.opengl.GLES20;
 
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,6 +18,7 @@ public class GLProgram {
     private final int mode;
     private final int first;
     private final int count;
+    private final Buffer indices;
 
     private int program;
     private final int[] programInfo;
@@ -32,9 +34,9 @@ public class GLProgram {
     public final int GL_ATTACHED_SHADERS = 5;
 
 
-    public GLProgram(int arrayIndex, ArrayList<GLAttribute> attributes, ArrayList<GLUniform> uniforms,
-                     String vertexShaderCode, String fragmentShaderCode, int mode, int first,
-                     int count) {
+    public GLProgram(int arrayIndex, ArrayList<GLAttribute> attributes,
+                     ArrayList<GLUniform> uniforms, String vertexShaderCode,
+                     String fragmentShaderCode, int mode, int first, int count, Buffer indices) {
 
         this.arrayIndex = arrayIndex;
         this.attributes = attributes;
@@ -42,6 +44,7 @@ public class GLProgram {
         this.mode = mode;
         this.first = first;
         this.count = count;
+        this.indices = indices;
         this.programInfo = new int[6];  /* 6 é o número de MACROS */
 
         initProgram(vertexShaderCode, fragmentShaderCode);
@@ -138,11 +141,11 @@ public class GLProgram {
                         attribute.getStride() * size, attribute.getOffset() * size);
 
             }
-            else if (attribute.getArrays() != null) {
+            else if (attribute.getArray() != null) {
 
                 GL.glVertexAttribPointer(indx, size, type, attribute.getNormalized(),
                         attribute.getStride() * size,
-                        GlBuffers.adaptFloatArray(attribute.getArrays()));
+                        attribute.getArray());
 
             } else {
                 throw new RuntimeException("Attribute não inicializado");
@@ -170,6 +173,9 @@ public class GLProgram {
         GL.glUseProgram(program);
         buffers.bindArrayBuffer(arrayIndex);
         define();
-        GL.glDrawArrays(mode, first, count);
+        if (first == -1 & indices != null)
+            GLES20.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, indices);
+        else
+            GL.glDrawArrays(mode, first, count);
     }
 }

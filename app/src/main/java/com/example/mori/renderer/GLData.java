@@ -1,5 +1,6 @@
 package com.example.mori.renderer;
 
+import java.nio.Buffer;
 import java.util.ArrayList;
 
 /**
@@ -15,6 +16,7 @@ public class GLData {
     private final String vertexShaderCode;
     private final int mode;
     private final int first;
+    private final GLArray indices;
     private final int count;
 
     public GLData(ArrayList<GLAttribute> attributes, String vertexShaderCode,
@@ -27,6 +29,7 @@ public class GLData {
         this.mode = mode;
         this.first = first;
         this.count = count;
+        indices = null;
     }
 
     public GLData(ArrayList<GLAttribute> attributes, ArrayList<GLUniform> uniforms,
@@ -39,6 +42,20 @@ public class GLData {
         this.fragmentShaderCode = fragmentShaderCode;
         this.mode = mode;
         this.first = first;
+        this.count = count;
+        indices = null;
+    }
+
+    public GLData(ArrayList<GLAttribute> attributes, String vertexShaderCode,
+                  String fragmentShaderCode, int mode, int count, short[] indices) {
+
+        this.attributes = attributes;
+        uniforms = new ArrayList<>();
+        this.vertexShaderCode = vertexShaderCode;
+        this.fragmentShaderCode = fragmentShaderCode;
+        this.mode = mode;
+        first = -1;
+        this.indices = new GLArray(indices);
         this.count = count;
     }
 
@@ -76,5 +93,9 @@ public class GLData {
 
     public void setArrayIndex(int arrayIndex){
         this.arrayIndex = arrayIndex;
+    }
+
+    public Buffer getIndices() {
+        return indices != null ? indices.getArray() : null;
     }
 }

@@ -16,6 +16,7 @@ public class MainActivity extends Activity{
 
         ArrayList<GLImage> images = new ArrayList<>();
         images.add(new DoisPontos());
+        images.add(new SquareImage());
         images.add(new TrianglesImage());
         images.add(new DotImage());
 

@@ -1,5 +1,7 @@
 package com.example.mori.renderer;
 
+import java.nio.Buffer;
+
 /**
  * Abstração de attribute.
  * Created by mori on 09/07/16.
@@ -9,7 +11,7 @@ public class GLAttribute {
     private final boolean normalized;
     private final int stride;
     private final int offset;
-    private final float[] arrays;
+    private final GLArray array;
 
     /**
      * Construtor
@@ -23,7 +25,7 @@ public class GLAttribute {
         this.normalized = normalized;
         this.stride = stride;
         this.offset = offset;
-        this.arrays = null;
+        this.array = null;
     }
 
     /**
@@ -31,13 +33,13 @@ public class GLAttribute {
      * @param name nome do atribute que receberá o array
      * @param normalized Se true então o array será normalizado.
      * @param stride quantidade de elementos no array a ser usado pelo attribute.
-     * @param arrays array sem buffer objects
+     * @param array array sem buffer objects
      */
-    public GLAttribute(String name, boolean normalized, int stride, float[] arrays) {
+    public GLAttribute(String name, boolean normalized, int stride, float[] array) {
         this.name = name;
         this.normalized = normalized;
         this.stride = stride;
-        this.arrays = arrays;
+        this.array = new GLArray(array);
         this.offset = -1;
     }
 
@@ -57,7 +59,7 @@ public class GLAttribute {
         return offset;
     }
 
-    public float[] getArrays() {
-        return arrays;
+    public Buffer getArray() {
+        return array != null ? array.getArray() : null;
     }
 }

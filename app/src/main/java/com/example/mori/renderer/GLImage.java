@@ -23,6 +23,14 @@ public abstract class GLImage {
                 count);
     }
 
+    protected void addData(ArrayList<GLAttribute> attributes,
+                           String vertexShaderCode, String fragmentShaderCode, int mode, int count,
+                           short[] indices) {
+
+        data = new GLData(attributes, vertexShaderCode, fragmentShaderCode, mode, count,
+                indices);
+    }
+
     public GLData getData(){
         return data;
     }
