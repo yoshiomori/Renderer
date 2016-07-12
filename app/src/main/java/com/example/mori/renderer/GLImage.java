@@ -24,6 +24,7 @@ public abstract class GLImage {
     private int first = -1;
     private Buffer indices = null;
     private int count = -1;
+    private int[] uniformType;
 
     protected void setAttribute(String name, Boolean normalized, int stride, int offset){
         attributes.add(new GLAttribute(name, normalized, stride, offset));
@@ -158,7 +159,7 @@ public abstract class GLImage {
         byte[] name = new byte[programInfo[GL_ACTIVE_UNIFORM_MAX_LENGTH]];
         int[] length = new int[1];
         int[] size = new int[1];
-        int[] uniformType = new int[1];
+        uniformType = new int[programInfo[GL_ACTIVE_UNIFORMS]];
         uniformLocation = new HashMap<>(programInfo[GL_ACTIVE_UNIFORMS]);
         for (int index = 0; index < programInfo[GL_ACTIVE_UNIFORMS]; index++) {
             GL.glGetActiveUniform(program, index, name.length, length, 0, size, 0, uniformType,
@@ -239,9 +240,7 @@ public abstract class GLImage {
         for (GLUniform uniform :
                 uniforms) {
             int location = uniformLocation.get(uniform.getName());
-            if ((uniform.getName() != null) & (uniform.getArray() != null)
-                    & (uniform.getCount() >= 0) & (uniform.getOffset() >= 0)) {
-
+            if (uniformType[location] == GLES20.GL_FLOAT_VEC4) {
                 GL.glUniform4fv(location, uniform.getCount(), uniform.getArray(),
                         uniform.getOffset());
             }
