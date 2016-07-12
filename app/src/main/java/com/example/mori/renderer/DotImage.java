@@ -8,7 +8,7 @@ package com.example.mori.renderer;
 public class DotImage extends GLImage {
     public DotImage(){
         setArray(new float[]{0.0f, 0.5f});
-        setUniform("color", 1, new float[]{0.5f, 0.0f, 0.5f, 0.1f}, 0);
+        setUniform("color", new float[]{0.5f, 0.0f, 0.5f, 0.1f});
         setShader(
                 "/* Vertex Shader */" +
                         "attribute vec2 vPosition;" +

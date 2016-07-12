@@ -6,16 +6,12 @@ package com.example.mori.renderer;
  */
 public class GLUniform {
     private String name;
-    private int count;
     private float[] array;
-    private int offset;
 
-    public GLUniform(String name, int count, float[] array, int offset) {
+    public GLUniform(String name, float[] array) {
 
         this.name = name;
-        this.count = count;
         this.array = array;
-        this.offset = offset;
     }
 
     public String getName() {
@@ -26,27 +22,11 @@ public class GLUniform {
         this.name = name;
     }
 
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
     public float[] getArray() {
         return array;
     }
 
     public void setArray(float[] array) {
         this.array = array;
-    }
-
-    public int getOffset() {
-        return offset;
-    }
-
-    public void setOffset(int offset) {
-        this.offset = offset;
     }
 }

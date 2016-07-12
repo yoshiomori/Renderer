@@ -34,8 +34,8 @@ public abstract class GLImage {
         attributes.add(new GLAttribute(name, normalized, stride, floats));
     }
 
-    protected void setUniform(String name, int count, float[] array, int offset){
-        uniforms.add(new GLUniform(name, count, array, offset));
+    protected void setUniform(String name, float[] array){
+        uniforms.add(new GLUniform(name, array));
     }
 
     protected void setArray(float[] array) {
@@ -241,8 +241,10 @@ public abstract class GLImage {
                 uniforms) {
             int location = uniformLocation.get(uniform.getName());
             if (uniformType[location] == GLES20.GL_FLOAT_VEC4) {
-                GL.glUniform4fv(location, uniform.getCount(), uniform.getArray(),
-                        uniform.getOffset());
+                GL.glUniform4fv(location, 1, uniform.getArray(), 0);
+            }
+            else if (uniformType[location] == GLES20.GL_FLOAT_MAT3) {
+                GLES20.glUniformMatrix4fv(location, 1, false, uniform.getArray(), 0);
             }
             else {
                 throw new RuntimeException("Caso não implementado");
