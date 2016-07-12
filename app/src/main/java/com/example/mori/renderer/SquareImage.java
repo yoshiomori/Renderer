@@ -16,13 +16,14 @@ public class SquareImage extends GLImage {
                         "precision mediump float;" +
                         "void main(){" +
                         "   gl_FragColor = vec4(0.0, 1.0, 0.5, 1.0);" +
-                        "}",
-                new GLAttribute("position", false, 0, new float[]{
-                        -1.0f, 1.0f, 0.0f, 1.0f,
-                        -0.7f, 1.0f, 0.0f, 1.0f,
-                        -1.0f, 0.7f, 0.0f, 1.0f,
-                        -0.7f, 0.7f, 0.0f, 1.0f
-                }));
+                        "}"
+        );
+        setAttribute("position", false, 0, new float[]{
+                -1.0f, 1.0f, 0.0f, 1.0f,
+                -0.7f, 1.0f, 0.0f, 1.0f,
+                -1.0f, 0.7f, 0.0f, 1.0f,
+                -0.7f, 0.7f, 0.0f, 1.0f
+        });
         setDraw(GL.GL_TRIANGLES, 6,
                 new short[]{
                         0, 1, 2,

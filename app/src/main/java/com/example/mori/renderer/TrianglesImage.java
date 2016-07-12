@@ -16,12 +16,12 @@ public class TrianglesImage extends GLImage {
                         "precision mediump float;" +
                         "void main(){" +
                         "   gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);" +
-                        "}",
-                new GLAttribute("position", false, 0, new float[]{
+                        "}");
+        setAttribute("position", false, 0, new float[]{
                         0.0f, 0.5f, 0.0f, 1.0f,
                         0.5f, 0.0f, 0.0f, 1.0f,
                         0.0f, -0.5f, 0.0f, 1.0f
-                }));
+                });
         setDraw(GL.GL_TRIANGLES, 0, 3);
     }
 }

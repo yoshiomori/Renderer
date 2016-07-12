@@ -28,8 +28,7 @@ public class Renderer implements GLSurfaceView.Renderer{
             if (image.getElementArray() != null) {
                 image.setElementArrayIndex(bufferSize++);
             }
-            if (image.getVertexShaderCode() == null | image.getFragmentShaderCode() == null
-                    | image.getAttributes() == null) {
+            if (image.getVertexShaderCode() == null | image.getFragmentShaderCode() == null) {
                 throw new RuntimeException("Shader deve ser configurado. " +
                         "Utilize o método setShader da class GLImage!");
             }

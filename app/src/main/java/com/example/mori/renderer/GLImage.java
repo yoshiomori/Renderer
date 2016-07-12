@@ -3,6 +3,7 @@ package com.example.mori.renderer;
 import android.opengl.GLES20;
 
 import java.nio.Buffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -13,10 +14,10 @@ public abstract class GLImage {
 
     private int arrayIndex = -1;
     private int elementArrayIndex = -1;
-    private GLAttribute[] attributes = null;
+    private ArrayList<GLAttribute> attributes = new ArrayList<>();
     private float[] array = null;
     private short[] elementArray = null;
-    private GLUniform[] uniforms;
+    private ArrayList<GLUniform> uniforms = new ArrayList<>();
     private String fragmentShaderCode = null;
     private String vertexShaderCode = null;
     private int mode = -1;
@@ -24,8 +25,16 @@ public abstract class GLImage {
     private Buffer indices = null;
     private int count = -1;
 
-    protected void setUniforms(GLUniform... uniforms){
-        this.uniforms = uniforms;
+    protected void setAttribute(String name, Boolean normalized, int stride, int offset){
+        attributes.add(new GLAttribute(name, normalized, stride, offset));
+    }
+
+    protected void setAttribute(String name, Boolean normalized, int stride, float[] floats){
+        attributes.add(new GLAttribute(name, normalized, stride, floats));
+    }
+
+    protected void setUniform(String name, int count, float[] array, int offset){
+        uniforms.add(new GLUniform(name, count, array, offset));
     }
 
     protected void setArray(float[] array) {
@@ -56,10 +65,9 @@ public abstract class GLImage {
         this.indices = GlBuffers.adapt(indices);
     }
 
-    protected void setShader(String vertexShaderCode, String fragmentShaderCode, GLAttribute... attributes) {
+    protected void setShader(String vertexShaderCode, String fragmentShaderCode) {
         this.vertexShaderCode = vertexShaderCode;
         this.fragmentShaderCode = fragmentShaderCode;
-        this.attributes = attributes;
     }
 
     public String getFragmentShaderCode() {
@@ -68,10 +76,6 @@ public abstract class GLImage {
 
     public String getVertexShaderCode() {
         return vertexShaderCode;
-    }
-
-    public GLAttribute[] getAttributes() {
-        return attributes;
     }
 
 
@@ -232,19 +236,18 @@ public abstract class GLImage {
     }
 
     private void defineUniforms() {
-        if (uniforms != null)
-            for (GLUniform uniform :
-                    uniforms) {
-                int location = uniformLocation.get(uniform.getName());
-                if ((uniform.getName() != null) & (uniform.getArray() != null)
-                        & (uniform.getCount() >= 0) & (uniform.getOffset() >= 0)) {
+        for (GLUniform uniform :
+                uniforms) {
+            int location = uniformLocation.get(uniform.getName());
+            if ((uniform.getName() != null) & (uniform.getArray() != null)
+                    & (uniform.getCount() >= 0) & (uniform.getOffset() >= 0)) {
 
-                    GL.glUniform4fv(location, uniform.getCount(), uniform.getArray(),
-                            uniform.getOffset());
-                }
-                else {
-                    throw new RuntimeException("Caso não implementado");
-                }
+                GL.glUniform4fv(location, uniform.getCount(), uniform.getArray(),
+                        uniform.getOffset());
             }
+            else {
+                throw new RuntimeException("Caso não implementado");
+            }
+        }
     }
 }
