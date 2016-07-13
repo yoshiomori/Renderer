@@ -136,4 +136,31 @@ public class GL{
         GLES20.glUniform4fv(location, count, array, offset);
         checkGlError("glUniform4fv");
     }
+
+    public static void glActiveTexture(int texture) {
+        GLES20.glActiveTexture(texture);
+        checkGlError("glActiveTexture");
+    }
+
+    public static void glTexImage2D(int target, int level, int internalformat, int width,
+                                    int height, int border, int format, int type, Buffer pixels) {
+        GLES20.glTexImage2D(
+                target, level, internalformat, width, height, border, format, type, pixels);
+        checkGlError("glTexImage2D");
+    }
+
+    public static void glTexParameteri(int glTexture2d, int glTextureMinFilter, int glLinear) {
+        GLES20.glTexParameteri(glTexture2d, glTextureMinFilter, glLinear);
+        checkGlError("glTexParameteri");
+    }
+
+    public static void glBindTexture(int target, int texture) {
+        GLES20.glBindTexture(target, texture);
+        checkGlError("glBindTexture");
+    }
+
+    public static void glGenTextures(int n, int[] textures, int offset) {
+        GLES20.glGenTextures(n, textures, offset);
+        checkGlError("glGenTextures");
+    }
 }

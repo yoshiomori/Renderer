@@ -1,5 +1,8 @@
 package com.example.mori.renderer;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 
 import java.nio.Buffer;
@@ -24,7 +27,19 @@ public abstract class GLImage {
     private int first = -1;
     private Buffer indices = null;
     private int count = -1;
-    private int[] uniformType;
+    private int[] uniformType = null;
+    private Bitmap bitmap = null;
+    private int textureIndex = -1;
+    private Context context;
+
+    protected GLImage(Context context) {
+        this.context = context;
+    }
+
+    public void setTexture(String name, int id) {
+        setUniform(name, 0);
+        this.bitmap = BitmapFactory.decodeResource(context.getResources(), id);
+    }
 
     protected void setAttribute(String name, Boolean normalized, int stride, int offset){
         attributes.add(new GLAttribute(name, normalized, stride, offset));
@@ -36,6 +51,10 @@ public abstract class GLImage {
 
     protected void setUniform(String name, float[] array){
         uniforms.add(new GLUniform(name, array));
+    }
+
+    protected void setUniform(String name, int x){
+        uniforms.add(new GLUniform(name, x));
     }
 
     protected void setArray(float[] array) {
@@ -181,9 +200,10 @@ public abstract class GLImage {
         }
     }
 
-    public void render(GLBuffers buffers) {
+    public void render(GLBuffers buffers, GLTextures textures) {
         GL.glUseProgram(program);
         buffers.bindArrayBuffer(arrayIndex);
+        textures.bindTextures(textureIndex);
         defineAttributes();
         defineUniforms();
         if (first == -1 & indices != null)
@@ -246,9 +266,24 @@ public abstract class GLImage {
             else if (uniformType[location] == GLES20.GL_FLOAT_MAT3) {
                 GLES20.glUniformMatrix4fv(location, 1, false, uniform.getArray(), 0);
             }
+            else if (uniformType[location] == GLES20.GL_SAMPLER_2D) {
+                GLES20.glUniform1i(location, uniform.getX());
+            }
             else {
                 throw new RuntimeException("Caso não implementado");
             }
         }
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setTextureIndex(int textureIndex) {
+        this.textureIndex = textureIndex;
+    }
+
+    public int getTextureIndex() {
+        return textureIndex;
     }
 }

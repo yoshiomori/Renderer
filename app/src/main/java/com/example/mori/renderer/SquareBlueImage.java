@@ -1,11 +1,14 @@
 package com.example.mori.renderer;
 
+import android.content.Context;
+
 /**
  * Demostração de uso do element array buffer
  * Created by mori on 11/07/16.
  */
 public class SquareBlueImage extends GLImage {
-    public SquareBlueImage() {
+    public SquareBlueImage(Context applicationContext) {
+        super(applicationContext);
         setElementArray(new short[]{
                 0, 1, 2,
                 2, 1, 3

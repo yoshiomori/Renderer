@@ -1,11 +1,14 @@
 package com.example.mori.renderer;
 
+import android.content.Context;
+
 /**
  * Demostração de como desenhar um triângulo
  * Created by mori on 09/07/16.
  */
 public class TrianglesImage extends GLImage {
-    public TrianglesImage(){
+    public TrianglesImage(Context applicationContext){
+        super(applicationContext);
         setShader(
                 "/*vertexShader*/" +
                         "attribute vec4 position;" +

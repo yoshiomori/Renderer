@@ -10,16 +10,13 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by mori on 06/07/16.
  */
 public class Renderer implements GLSurfaceView.Renderer{
-    // Dados brutos
     private GLImage[] images;
-    private int bufferSize;
-
-    // Dados processados
-    private GLBuffers buffers;
+    private int bufferSize = 0;
+    private int texturesSize = 0;
+    private GLBuffers buffers = null;
+    private GLTextures textures;
 
     public Renderer(GLImage... images) {
-
-        int bufferSize = 0;
         for (GLImage image :
                 images) {
             if (image.getArray() != null) {
@@ -34,15 +31,23 @@ public class Renderer implements GLSurfaceView.Renderer{
             }
         }
 
+        for (GLImage image :
+                images) {
+            image.setTextureIndex(texturesSize++);
+        }
+
         this.images = images;
-        this.bufferSize = bufferSize;
-        this.buffers = null;
     }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         loadBuffers();
+        loadUnits();
         loadShaderProgram();
+    }
+
+    private void loadUnits() {
+        textures = new GLTextures(images, texturesSize);
     }
 
     private void loadBuffers() {
@@ -66,7 +71,7 @@ public class Renderer implements GLSurfaceView.Renderer{
         GL.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         for (GLImage image : images) {
-            image.render(buffers);
+            image.render(buffers, textures);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.mori.renderer;
 
 
 import android.app.Activity;
+import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
@@ -14,11 +15,13 @@ public class MainActivity extends Activity{
         GLSurfaceView screen = new GLSurfaceView(this);
         screen.setEGLContextClientVersion(2);
         screen.setRenderer(new Renderer(
-                new DotImage(),
-                new TrianglesImage(),
-                new DoisPontos(),
-                new SquareBlueImage(),
-                new SquareImage()));
+                new DotImage(getApplicationContext()),
+                new TrianglesImage(getApplicationContext()),
+                new DoisPontos(getApplicationContext()),
+                new SquareBlueImage(getApplicationContext()),
+                new SquareTextureImage(getApplicationContext()),
+                new SquareImage(getApplicationContext())
+        ));
         screen.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         setContentView(screen);
     }

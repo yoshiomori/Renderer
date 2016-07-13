@@ -1,11 +1,14 @@
 package com.example.mori.renderer;
 
+import android.content.Context;
+
 /**
  * Demostração de como desenhar com element array.
  * Created by mori on 10/07/16.
  */
 public class SquareImage extends GLImage {
-    public SquareImage(){
+    public SquareImage(Context applicationContext){
+        super(applicationContext);
         setShader(
                 "/*vertexShader*/" +
                         "attribute vec4 position;" +
