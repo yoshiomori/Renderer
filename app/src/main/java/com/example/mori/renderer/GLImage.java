@@ -63,7 +63,7 @@ public abstract class GLImage {
     protected void setDraw(int mode, int count, short[] indices) {
         this.mode = mode;
         this.count = count;
-        this.indices = GlBuffers.adapt(indices);
+        this.indices = GLBuffers.adapt(indices);
     }
 
     protected void setShader(String vertexShaderCode, String fragmentShaderCode) {
@@ -181,7 +181,7 @@ public abstract class GLImage {
         }
     }
 
-    public void render(GlBuffers buffers) {
+    public void render(GLBuffers buffers) {
         GL.glUseProgram(program);
         buffers.bindArrayBuffer(arrayIndex);
         defineAttributes();

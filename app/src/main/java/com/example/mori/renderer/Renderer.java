@@ -15,7 +15,7 @@ public class Renderer implements GLSurfaceView.Renderer{
     private int bufferSize;
 
     // Dados processados
-    private GlBuffers buffers;
+    private GLBuffers buffers;
 
     public Renderer(GLImage... images) {
 
@@ -46,7 +46,7 @@ public class Renderer implements GLSurfaceView.Renderer{
     }
 
     private void loadBuffers() {
-        buffers = new GlBuffers(images, bufferSize);
+        buffers = new GLBuffers(images, bufferSize);
     }
 
     private void loadShaderProgram() {

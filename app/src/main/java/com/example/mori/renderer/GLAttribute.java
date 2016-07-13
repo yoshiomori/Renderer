@@ -39,7 +39,7 @@ public class GLAttribute {
         this.name = name;
         this.normalized = normalized;
         this.stride = stride;
-        this.array = GlBuffers.adapt(array);
+        this.array = GLBuffers.adapt(array);
         this.offset = -1;
     }
 
