@@ -264,6 +264,9 @@ public abstract class GLImage {
                 GL.glUniform4fv(location, 1, uniform.getArray(), 0);
             }
             else if (uniformType[location] == GLES20.GL_FLOAT_MAT3) {
+                GLES20.glUniformMatrix3fv(location, 1, false, uniform.getArray(), 0);
+            }
+            else if (uniformType[location] == GLES20.GL_FLOAT_MAT4) {
                 GLES20.glUniformMatrix4fv(location, 1, false, uniform.getArray(), 0);
             }
             else if (uniformType[location] == GLES20.GL_SAMPLER_2D) {
