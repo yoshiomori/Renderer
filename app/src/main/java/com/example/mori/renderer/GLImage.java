@@ -206,9 +206,9 @@ public abstract class GLImage {
         textures.bindTextures(textureIndex);
         defineAttributes();
         defineUniforms();
-        if (first == -1 & indices != null)
+        if (indices != null)
             GL.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, indices);
-        else if (first >= 0 & indices == null & elementArrayIndex >= 0){
+        else if (elementArrayIndex >= 0){
             buffers.bindElementArrayBuffer(elementArrayIndex);
             GL.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, first);
             buffers.unbindElementArrayBuffer();

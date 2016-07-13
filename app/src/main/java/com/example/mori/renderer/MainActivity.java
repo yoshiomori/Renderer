@@ -2,7 +2,6 @@ package com.example.mori.renderer;
 
 
 import android.app.Activity;
-import android.graphics.BitmapFactory;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
