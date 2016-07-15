@@ -29,9 +29,9 @@ public class SquareBlueImage extends GLImage {
                         "precision mediump float;" +
                         "void main(){" +
                         "   gl_FragColor = vec4(0.2, 0.1, 0.8, 1.0);" +
-                        "}"
+                        "}",
+                GL.GL_TRIANGLES, 0, 6
         );
         setAttribute("position", false, 0, 0);
-        setDraw(GL.GL_TRIANGLES, 0, 6);
     }
 }

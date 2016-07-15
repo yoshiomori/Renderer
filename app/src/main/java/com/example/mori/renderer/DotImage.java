@@ -24,9 +24,9 @@ public class DotImage extends GLImage {
                         "uniform vec4 color;" +
                         "void main() {" +
                         "  gl_FragColor = color;" +
-                        "}"
+                        "}",
+                GL.GL_POINTS, 0, 1
         );
         setAttribute("vPosition", false, 0, 0);
-        setDraw(GL.GL_POINTS, 0, 1);
     }
 }

@@ -73,21 +73,20 @@ public abstract class GLImage {
      * @param first ou offset, quando element array buffer é declarado
      * @param count número de vértices a ser desenhado.
      */
-    protected void setDraw(int mode, int first, int count) {
+    protected void setShader(String vertexShaderCode, String fragmentShaderCode, int mode, int first, int count) {
+        this.vertexShaderCode = vertexShaderCode;
+        this.fragmentShaderCode = fragmentShaderCode;
         this.mode = mode;
         this.first = first;
         this.count = count;
     }
 
-    protected void setDraw(int mode, int count, short[] indices) {
+    protected void setShader(String vertexShaderCode, String fragmentShaderCode, int mode, int count,  short[] indices) {
+        this.vertexShaderCode = vertexShaderCode;
+        this.fragmentShaderCode = fragmentShaderCode;
         this.mode = mode;
         this.count = count;
         this.indices = GLBuffers.adapt(indices);
-    }
-
-    protected void setShader(String vertexShaderCode, String fragmentShaderCode) {
-        this.vertexShaderCode = vertexShaderCode;
-        this.fragmentShaderCode = fragmentShaderCode;
     }
 
     public String getFragmentShaderCode() {
@@ -206,15 +205,17 @@ public abstract class GLImage {
         textures.bindTextures(textureIndex);
         defineAttributes();
         defineUniforms();
-        if (indices != null)
+        if (indices != null) {
             GL.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, indices);
+        }
         else if (elementArrayIndex >= 0){
             buffers.bindElementArrayBuffer(elementArrayIndex);
             GL.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, first);
             buffers.unbindElementArrayBuffer();
         }
-        else
+        else {
             GL.glDrawArrays(mode, first, count);
+        }
     }
 
     private void defineAttributes() {
@@ -242,7 +243,6 @@ public abstract class GLImage {
 
             }
             else if (attribute.getArray() != null) {
-
                 GL.glVertexAttribPointer(indx, size, type, attribute.getNormalized(),
                         attribute.getStride() * size,
                         attribute.getArray());

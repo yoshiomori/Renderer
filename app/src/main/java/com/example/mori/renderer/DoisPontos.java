@@ -21,9 +21,9 @@ public class DoisPontos extends GLImage {
                         "precision mediump float;" +
                         "void main() {" +
                         "  gl_FragColor = vec4(1.0, 0.0, 0.0, 0.1);" +
-                        "}"
+                        "}",
+                GL.GL_POINTS, 0, 2
         );
         setAttribute("vPosition", false, 0, 0);
-        setDraw(GL.GL_POINTS, 0, 2);
     }
 }

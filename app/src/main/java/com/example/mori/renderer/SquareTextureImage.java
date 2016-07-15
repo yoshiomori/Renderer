@@ -34,10 +34,10 @@ public class SquareTextureImage extends GLImage {
                         "uniform sampler2D u_texture;" +
                         "void main() {" +
                         "  gl_FragColor = texture2D(u_texture, vTexCoord);" +
-                        "}"
+                        "}",
+                GL.GL_TRIANGLES, 0, 6
         );
         setAttribute("vPosition", false, 0, 0);
-        setDraw(GL.GL_TRIANGLES, 0, 6);
         setTexture("u_texture", R.drawable.mesa);
     }
 }
