@@ -20,7 +20,8 @@ public class MainActivity extends Activity{
                 new SquareBlueImage(getApplicationContext()),
                 new SquareTextureImage(getApplicationContext()),
                 new SquareImage(getApplicationContext()),
-                new YellowPointImage(getApplicationContext())
+                new YellowPointImage(getApplicationContext()),
+                new CardImage(getApplicationContext())
         ));
         screen.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         setContentView(screen);

@@ -1,7 +1,6 @@
 package com.example.mori.renderer;
 
 import android.content.Context;
-import android.opengl.GLES20;
 
 /**
  * Demostração de desenho sem array e element array.
@@ -22,7 +21,7 @@ public class YellowPointImage extends GLImage{
                         "void main() {" +
                         "   gl_FragColor = vec4(1, 1, 0, 1);" +
                         "}",
-                GLES20.GL_POINTS, 0, 1
+                GL.GL_POINTS, 0, 1
         );
         setAttribute("position", false, 0, new float[]{0f, 0f, 0f, 1f});
     }
