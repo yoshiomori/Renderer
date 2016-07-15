@@ -3,7 +3,6 @@ package com.example.mori.renderer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.opengl.GLES20;
 
 import java.nio.Buffer;
 import java.util.ArrayList;
@@ -83,7 +82,18 @@ public abstract class GLImage {
     protected void setUniform(String name, int x){
         if (uniformIndexes.containsKey(name)) {
             GLUniform uniform = uniforms.get(uniformIndexes.get(name));
-            uniform.setX(x);
+            uniform.setXi(x);
+        }
+        else {
+            uniformIndexes.put(name, uniforms.size());
+            uniforms.add(new GLUniform(name, x));
+        }
+    }
+
+    public void setUniform(String name, float x) {
+        if (uniformIndexes.containsKey(name)) {
+            GLUniform uniform = uniforms.get(uniformIndexes.get(name));
+            uniform.setXf(x);
         }
         else {
             uniformIndexes.put(name, uniforms.size());
@@ -172,25 +182,27 @@ public abstract class GLImage {
         program = GL.glCreateProgram();
         if (program == 0)
             throw new RuntimeException("Falha ao criar o programa");
-        GL.glAttachShader(program, loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode));
-        GL.glAttachShader(program, loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode));
+        int vertexShader = loadShader(GL.GL_VERTEX_SHADER, vertexShaderCode);
+        GL.glAttachShader(program, vertexShader);
+        int fragmentShader = loadShader(GL.GL_FRAGMENT_SHADER, fragmentShaderCode);
+        GL.glAttachShader(program, fragmentShader);
         GL.glLinkProgram(program);
 
-        GL.glGetProgramiv(program, GLES20.GL_ACTIVE_ATTRIBUTES, programInfo, GL_ACTIVE_ATTRIBUTES);
-        GL.glGetProgramiv(program, GLES20.GL_ACTIVE_ATTRIBUTE_MAX_LENGTH,
+        GL.glGetProgramiv(program, GL.GL_ACTIVE_ATTRIBUTES, programInfo, GL_ACTIVE_ATTRIBUTES);
+        GL.glGetProgramiv(program, GL.GL_ACTIVE_ATTRIBUTE_MAX_LENGTH,
                 programInfo, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH);
-        GL.glGetProgramiv(program, GLES20.GL_ACTIVE_UNIFORMS, programInfo, GL_ACTIVE_UNIFORMS);
-        GL.glGetProgramiv(program, GLES20.GL_ACTIVE_UNIFORM_MAX_LENGTH, programInfo,
+        GL.glGetProgramiv(program, GL.GL_ACTIVE_UNIFORMS, programInfo, GL_ACTIVE_UNIFORMS);
+        GL.glGetProgramiv(program, GL.GL_ACTIVE_UNIFORM_MAX_LENGTH, programInfo,
                 GL_ACTIVE_UNIFORM_MAX_LENGTH);
         int GL_LINK_STATUS = 4;
-        GL.glGetProgramiv(program, GLES20.GL_LINK_STATUS, programInfo,
+        GL.glGetProgramiv(program, GL.GL_LINK_STATUS, programInfo,
                 GL_LINK_STATUS);
         int GL_ATTACHED_SHADERS = 5;
-        GL.glGetProgramiv(program, GLES20.GL_ATTACHED_SHADERS, programInfo,
+        GL.glGetProgramiv(program, GL.GL_ATTACHED_SHADERS, programInfo,
                 GL_ATTACHED_SHADERS);
 
 
-        if (programInfo[GL_LINK_STATUS] == GLES20.GL_FALSE) {
+        if (programInfo[GL_LINK_STATUS] == GL.GL_FALSE) {
             throw new RuntimeException("Link error: attached shader: " + programInfo[GL_ATTACHED_SHADERS]);
         }
 
@@ -240,11 +252,11 @@ public abstract class GLImage {
         defineAttributes();
         defineUniforms();
         if (indices != null) {
-            GL.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, indices);
+            GL.glDrawElements(mode, count, GL.GL_UNSIGNED_SHORT, indices);
         }
         else if (elementArrayIndex >= 0){
             buffers.bindElementArrayBuffer(elementArrayIndex);
-            GL.glDrawElements(mode, count, GLES20.GL_UNSIGNED_SHORT, first);
+            GL.glDrawElements(mode, count, GL.GL_UNSIGNED_SHORT, first);
             buffers.unbindElementArrayBuffer();
         }
         else {
@@ -258,13 +270,13 @@ public abstract class GLImage {
             int indx = attributeLocation.get(attribute.getName());
 
             /* -1 é não implementado */
-            int size = attributeType[indx] == GLES20.GL_FLOAT_VEC4 ? 4
-                    : attributeType[indx] == GLES20.GL_FLOAT_VEC3 ? 3
-                    : attributeType[indx] == GLES20.GL_FLOAT_VEC2 ? 2
+            int size = attributeType[indx] == GL.GL_FLOAT_VEC4 ? 4
+                    : attributeType[indx] == GL.GL_FLOAT_VEC3 ? 3
+                    : attributeType[indx] == GL.GL_FLOAT_VEC2 ? 2
                     : -1;
-            int type = attributeType[indx] == GLES20.GL_FLOAT_VEC4
-                    | attributeType[indx] == GLES20.GL_FLOAT_VEC3
-                    | attributeType[indx] == GLES20.GL_FLOAT_VEC2 ? GLES20.GL_FLOAT
+            int type = attributeType[indx] == GL.GL_FLOAT_VEC4
+                    | attributeType[indx] == GL.GL_FLOAT_VEC3
+                    | attributeType[indx] == GL.GL_FLOAT_VEC2 ? GL.GL_FLOAT
                     : -1;
 
             if (size == -1 | type == -1)
@@ -293,21 +305,40 @@ public abstract class GLImage {
     private void defineUniforms() {
         for (GLUniform uniform :
                 uniforms) {
-            int location = uniformLocation.get(uniform.getName());
-            if (uniformType[location] == GLES20.GL_FLOAT_VEC4) {
-                GL.glUniform4fv(location, 1, uniform.getArray(), 0);
-            }
-            else if (uniformType[location] == GLES20.GL_FLOAT_MAT3) {
-                GLES20.glUniformMatrix3fv(location, 1, false, uniform.getArray(), 0);
-            }
-            else if (uniformType[location] == GLES20.GL_FLOAT_MAT4) {
-                GLES20.glUniformMatrix4fv(location, 1, false, uniform.getArray(), 0);
-            }
-            else if (uniformType[location] == GLES20.GL_SAMPLER_2D) {
-                GLES20.glUniform1i(location, uniform.getX());
+            int location;
+            String uniformName = uniform.getName();
+            if (uniformLocation.containsKey(uniformName)) {
+                location = uniformLocation.get(uniformName);
+                if (uniformType[location] == GL.GL_FLOAT_VEC2) {
+                    GL.glUniform2fv(location, 1, uniform.getArray(), 0);
+                }
+                else if (uniformType[location] == GL.GL_FLOAT_VEC3) {
+                    GL.glUniform3fv(location, 1, uniform.getArray(), 0);
+                }
+                else if (uniformType[location] == GL.GL_FLOAT_VEC4) {
+                    GL.glUniform4fv(location, 1, uniform.getArray(), 0);
+                }
+                else if (uniformType[location] == GL.GL_FLOAT_MAT2) {
+                    GL.glUniformMatrix2fv(location, 1, false, uniform.getArray(), 0);
+                }
+                else if (uniformType[location] == GL.GL_FLOAT_MAT3) {
+                    GL.glUniformMatrix3fv(location, 1, false, uniform.getArray(), 0);
+                }
+                else if (uniformType[location] == GL.GL_FLOAT_MAT4) {
+                    GL.glUniformMatrix4fv(location, 1, false, uniform.getArray(), 0);
+                }
+                else if (uniformType[location] == GL.GL_SAMPLER_2D) {
+                    GL.glUniform1i(location, uniform.getXi());
+                }
+                else if (uniformType[location] == GL.GL_FLOAT) {
+                    GL.glUniform1f(location, uniform.getXf());
+                }
+                else {
+                    throw new RuntimeException("Caso não implementado: " + uniformType[location]);
+                }
             }
             else {
-                throw new RuntimeException("Caso não implementado");
+                System.out.println("Uniform " + uniformName + " definido mas não usado!");
             }
         }
     }
@@ -323,4 +354,6 @@ public abstract class GLImage {
     public int getTextureIndex() {
         return textureIndex;
     }
+
+    public abstract void onSurfaceChanged(int width, int height);
 }

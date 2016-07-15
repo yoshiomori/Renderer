@@ -29,4 +29,9 @@ public class DotImage extends GLImage {
         );
         setAttribute("vPosition", false, 0, 0);
     }
+
+    @Override
+    public void onSurfaceChanged(int width, int height) {
+
+    }
 }

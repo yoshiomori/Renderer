@@ -33,4 +33,9 @@ public class SquareImage extends GLImage {
                 -0.7f, 0.7f, 0.0f, 1.0f
         });
     }
+
+    @Override
+    public void onSurfaceChanged(int width, int height) {
+
+    }
 }

@@ -34,4 +34,9 @@ public class SquareBlueImage extends GLImage {
         );
         setAttribute("position", false, 0, 0);
     }
+
+    @Override
+    public void onSurfaceChanged(int width, int height) {
+
+    }
 }

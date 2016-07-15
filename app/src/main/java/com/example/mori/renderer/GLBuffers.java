@@ -1,7 +1,5 @@
 package com.example.mori.renderer;
 
-import android.opengl.GLES20;
-
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -30,8 +28,8 @@ public class GLBuffers {
     }
 
     private void loadArray(Buffer buffer, int indice) {
-        GL.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[indice]);
-        GL.glBufferData(GLES20.GL_ARRAY_BUFFER, buffer.limit(), buffer, GLES20.GL_STATIC_DRAW);
+        GL.glBindBuffer(GL.GL_ARRAY_BUFFER, buffers[indice]);
+        GL.glBufferData(GL.GL_ARRAY_BUFFER, buffer.limit(), buffer, GL.GL_STATIC_DRAW);
     }
 
     public static ShortBuffer adapt(short[] shortArray) {
@@ -53,14 +51,14 @@ public class GLBuffers {
     }
 
     public void bindArrayBuffer(int arrayIndex) {
-        GL.glBindBuffer(GLES20.GL_ARRAY_BUFFER, arrayIndex >= 0 ? buffers[arrayIndex] : 0);
+        GL.glBindBuffer(GL.GL_ARRAY_BUFFER, arrayIndex >= 0 ? buffers[arrayIndex] : 0);
     }
 
     public void bindElementArrayBuffer(int elementArrayIndex) {
-        GL.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, buffers[elementArrayIndex]);
+        GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, buffers[elementArrayIndex]);
     }
 
     public void unbindElementArrayBuffer() {
-        GL.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);
+        GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 }

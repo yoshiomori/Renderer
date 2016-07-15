@@ -6,7 +6,7 @@ import android.content.Context;
  * Demostração de desenho sem array e element array.
  * Created by mori on 15/07/16.
  */
-public class YellowPointImage extends GLImage{
+public class YellowPointImage extends GLImage {
     public YellowPointImage(Context context) {
         super(context);
         setShader(
@@ -24,5 +24,10 @@ public class YellowPointImage extends GLImage{
                 GL.GL_POINTS, 0, 1
         );
         setAttribute("position", false, 0, new float[]{0f, 0f, 0f, 1f});
+    }
+
+    @Override
+    public void onSurfaceChanged(int width, int height) {
+
     }
 }

@@ -27,4 +27,9 @@ public class TrianglesImage extends GLImage {
                         0.0f, -0.5f, 0.0f, 1.0f
                 });
     }
+
+    @Override
+    public void onSurfaceChanged(int width, int height) {
+
+    }
 }

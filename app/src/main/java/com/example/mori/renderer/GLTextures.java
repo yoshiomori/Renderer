@@ -1,7 +1,6 @@
 package com.example.mori.renderer;
 
 import android.graphics.Bitmap;
-import android.opengl.GLES20;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -19,18 +18,18 @@ public class GLTextures {
                 images) {
             Bitmap data = image.getBitmap();
             if (data != null) {
-                GL.glBindTexture(GLES20.GL_TEXTURE_2D, textures[image.getTextureIndex()]);
-                GL.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, data.getWidth(),
-                        data.getHeight(), 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, adapt(data));
+                GL.glBindTexture(GL.GL_TEXTURE_2D, textures[image.getTextureIndex()]);
+                GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, data.getWidth(),
+                        data.getHeight(), 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, adapt(data));
                 GL.glTexParameteri(
-                        GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+                        GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
                 GL.glTexParameteri(
-                        GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+                        GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
                 GL.glTexParameteri(
-                        GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
+                        GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE);
                 GL.glTexParameteri(
-                        GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
-                GL.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+                        GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
+                GL.glBindTexture(GL.GL_TEXTURE_2D, 0);
             }
         }
     }
@@ -43,8 +42,8 @@ public class GLTextures {
     }
 
     public void bindTextures(int textureIndex) {
-            GL.glActiveTexture(GLES20.GL_TEXTURE0);
-            GL.glBindTexture(GLES20.GL_TEXTURE_2D,
+            GL.glActiveTexture(GL.GL_TEXTURE0);
+            GL.glBindTexture(GL.GL_TEXTURE_2D,
                     textureIndex < 0 ? 0 : this.textures[textureIndex]);
     }
 }

@@ -15,8 +15,39 @@ public class CardImage extends GLImage{
         setShader(
                 "/* Vertex Shader */" +
                         "attribute vec3 position;" +
+                        "uniform float right, left, top, bottom, near, far;" +
+                        "uniform vec3 eye, center, up;" +
+                        "mat4 frustum() {" +
+                        "   float r_width  = 1.0 / (right - left);" +
+                        "   float r_height = 1.0 / (top - bottom);" +
+                        "   float r_depth  = 1.0 / (near - far);" +
+                        "   float x = 2.0 * (near * r_width);" +
+                        "   float y = 2.0 * (near * r_height);" +
+                        "   float A = (right + left) * r_width;" +
+                        "   float B = (top + bottom) * r_height;" +
+                        "   float C = (far + near) * r_depth;" +
+                        "   float D = 2.0 * (far * near * r_depth);" +
+                        "   return mat4(x, 0, 0, 0, 0, y, 0, 0, A, B, C, -1, 0, 0, D, 0);" +
+                        "}" +
+                        "mat4 translate(float x, float y, float z) {" +
+                        "   return mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1);" +
+                        "}" +
+                        "mat4 look_at() {" +
+                        "   vec3 f, s, u;" +
+                        "" +
+                        "   f = normalize(vec3(center - eye));" +
+                        "" +
+                        "   s = normalize(cross(f, up));" +
+                        "" +
+                        "   u = cross(s, f);" +
+                        "   return mat4(s.x, u.x, -f.x, 0," +
+                        "               s.y, u.y, -f.y, 0," +
+                        "               s.z, u.z, -f.z, 0," +
+                        "               0, 0, 0, 1)" +
+                        "       * translate(-eye.x, -eye.y, -eye.z);" +
+                        "}" +
                         "void main() {" +
-                        "   gl_Position = vec4(position, 1);" +
+                        "   gl_Position = frustum() * look_at() * vec4(position, 1);" +
                         "}",
                 "/* Fragment Shader */" +
                         "precision mediump float;" +
@@ -26,6 +57,21 @@ public class CardImage extends GLImage{
                 GL.GL_TRIANGLES, 0, cardData.getCount()
         );
         setAttribute("position", false, 0, 0);
+
+        setUniform("eye", new float[]{0f, 0f, -6f});
+        setUniform("center", new float[]{0f, 0f, 0f});
+        setUniform("up", new float[]{0f, 1f, 0f});
+    }
+
+    @Override
+    public void onSurfaceChanged(int width, int height) {
+        float ratio = (float) width / height;
+        setUniform("left", -ratio);
+        setUniform("right", ratio);
+        setUniform("bottom", -1f);
+        setUniform("top", 1f);
+        setUniform("near", 3f);
+        setUniform("far", 7f);
     }
 
     private class CardData {

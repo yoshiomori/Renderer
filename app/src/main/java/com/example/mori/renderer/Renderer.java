@@ -41,6 +41,9 @@ public class Renderer implements GLSurfaceView.Renderer{
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+        // Set the background frame color
+        GL.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
         loadBuffers();
         loadUnits();
         loadShaderProgram();
@@ -63,12 +66,16 @@ public class Renderer implements GLSurfaceView.Renderer{
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-
+        for (GLImage image :
+                images) {
+            image.onSurfaceChanged(width, height);
+        }
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        GL.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        // Draw background color
+        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
         for (GLImage image : images) {
             image.render(buffers, textures);

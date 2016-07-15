@@ -12,6 +12,39 @@ import java.nio.Buffer;
 public class GL{
     public static final int GL_POINTS = GLES20.GL_POINTS;
     public static final int GL_TRIANGLES = GLES20.GL_TRIANGLES;
+    public static final int GL_ARRAY_BUFFER = GLES20.GL_ARRAY_BUFFER;
+    public static final int GL_ELEMENT_ARRAY_BUFFER = GLES20.GL_ELEMENT_ARRAY_BUFFER;
+    public static final int GL_STATIC_DRAW = GLES20.GL_STATIC_DRAW;
+    public static final int GL_FLOAT_VEC4 = GLES20.GL_FLOAT_VEC4;
+    public static final int GL_FLOAT_VEC3 = GLES20.GL_FLOAT_VEC3;
+    public static final int GL_FLOAT_VEC2 = GLES20.GL_FLOAT_VEC2;
+    public static final int GL_FLOAT = GLES20.GL_FLOAT;
+    public static final int GL_FLOAT_MAT2 = GLES20.GL_FLOAT_MAT2;
+    public static final int GL_FLOAT_MAT3 = GLES20.GL_FLOAT_MAT3;
+    public static final int GL_FLOAT_MAT4 = GLES20.GL_FLOAT_MAT4;
+    public static final int GL_SAMPLER_2D = GLES20.GL_SAMPLER_2D;
+    public static final int GL_VERTEX_SHADER = GLES20.GL_VERTEX_SHADER;
+    public static final int GL_FRAGMENT_SHADER = GLES20.GL_FRAGMENT_SHADER;
+    public static final int GL_ACTIVE_ATTRIBUTES = GLES20.GL_ACTIVE_ATTRIBUTES;
+    public static final int GL_ACTIVE_ATTRIBUTE_MAX_LENGTH = GLES20.GL_ACTIVE_ATTRIBUTE_MAX_LENGTH;
+    public static final int GL_ACTIVE_UNIFORMS = GLES20.GL_ACTIVE_UNIFORMS;
+    public static final int GL_LINK_STATUS = GLES20.GL_LINK_STATUS;
+    public static final int GL_ACTIVE_UNIFORM_MAX_LENGTH = GLES20.GL_ACTIVE_UNIFORM_MAX_LENGTH;
+    public static final int GL_FALSE = GLES20.GL_FALSE;
+    public static final int GL_ATTACHED_SHADERS = GLES20.GL_ATTACHED_SHADERS;
+    public static final int GL_UNSIGNED_SHORT = GLES20.GL_UNSIGNED_SHORT;
+    public static final int GL_TEXTURE0 = GLES20.GL_TEXTURE0;
+    public static final int GL_TEXTURE_2D = GLES20.GL_TEXTURE_2D;
+    public static final int GL_RGBA = GLES20.GL_RGBA;
+    public static final int GL_UNSIGNED_BYTE = GLES20.GL_UNSIGNED_BYTE;
+    public static final int GL_TEXTURE_MIN_FILTER = GLES20.GL_TEXTURE_MIN_FILTER;
+    public static final int GL_LINEAR = GLES20.GL_LINEAR;
+    public static final int GL_CLAMP_TO_EDGE = GLES20.GL_CLAMP_TO_EDGE;
+    public static final int GL_TEXTURE_MAG_FILTER = GLES20.GL_TEXTURE_MAG_FILTER;
+    public static final int GL_TEXTURE_WRAP_S = GLES20.GL_TEXTURE_WRAP_S;
+    public static final int GL_TEXTURE_WRAP_T = GLES20.GL_TEXTURE_WRAP_T;
+    public static final int GL_COLOR_BUFFER_BIT = GLES20.GL_COLOR_BUFFER_BIT;
+    public static final int GL_DEPTH_BUFFER_BIT = GLES20.GL_DEPTH_BUFFER_BIT;
 
     private static void checkGlError(String glOperation) {
         int error;
@@ -162,5 +195,48 @@ public class GL{
     public static void glGenTextures(int n, int[] textures, int offset) {
         GLES20.glGenTextures(n, textures, offset);
         checkGlError("glGenTextures");
+    }
+
+    public static void glUniform2fv(int location, int count, float[] v, int offset) {
+        GLES20.glUniform2fv(location, count, v, offset);
+        checkGlError("glUniform2fv");
+    }
+
+    public static void glUniform3fv(int location, int count, float[] v, int offset) {
+        GLES20.glUniform3fv(location, count, v, offset);
+        checkGlError("glUniform3fv");
+    }
+
+    public static void glUniformMatrix2fv(int location, int count, boolean transpose, float[] value,
+                                          int offset) {
+        GLES20.glUniformMatrix2fv(location, count, transpose, value, offset);
+        checkGlError("glUniformMatrix2fv");
+    }
+
+    public static void glUniformMatrix3fv(int location, int count, boolean transpose, float[] value,
+                                          int offset) {
+        GLES20.glUniformMatrix3fv(location, count, transpose, value, offset);
+        checkGlError("glUniformMatrix3fv");
+    }
+
+    public static void glUniformMatrix4fv(int location, int count, boolean transpose, float[] value,
+                                          int offset) {
+        GLES20.glUniformMatrix4fv(location, count, transpose, value, offset);
+        checkGlError("glUniformMatrix4fv");
+    }
+
+    public static void glUniform1i(int location, int x) {
+        GLES20.glUniform1i(location, x);
+        checkGlError("glUniform1i");
+    }
+
+    public static void glUniform1f(int location, float x) {
+        GLES20.glUniform1f(location, x);
+        checkGlError("glUniform1f");
+    }
+
+    public static void glClear(int mask) {
+        GLES20.glClear(mask);
+        checkGlError("glClear");
     }
 }

@@ -40,4 +40,9 @@ public class SquareTextureImage extends GLImage {
         setAttribute("vPosition", false, 0, 0);
         setTexture("u_texture", R.drawable.mesa);
     }
+
+    @Override
+    public void onSurfaceChanged(int width, int height) {
+
+    }
 }

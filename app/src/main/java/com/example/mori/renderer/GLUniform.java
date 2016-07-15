@@ -5,9 +5,10 @@ package com.example.mori.renderer;
  * Created by mori on 09/07/16.
  */
 public class GLUniform {
-    private int x = 0;
+    private int xi = 0;
     private String name = "";
     private float[] array = null;
+    private float xf;
 
     public GLUniform(String name, float[] array) {
         this.name = name;
@@ -16,7 +17,12 @@ public class GLUniform {
 
     public GLUniform(String name, int x) {
         this.name = name;
-        this.x = x;
+        this.xi = x;
+    }
+
+    public GLUniform(String name, float x) {
+        this.name = name;
+        xf = x;
     }
 
     public String getName() {
@@ -35,11 +41,19 @@ public class GLUniform {
         this.array = array;
     }
 
-    public int getX() {
-        return x;
+    public int getXi() {
+        return xi;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setXi(int x) {
+        xi = x;
+    }
+
+    public void setXf(float x) {
+        xf = x;
+    }
+
+    public float getXf() {
+        return xf;
     }
 }
