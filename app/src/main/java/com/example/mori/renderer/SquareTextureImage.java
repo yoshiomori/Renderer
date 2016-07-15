@@ -13,12 +13,10 @@ public class SquareTextureImage extends GLImage {
                 0, 1, 2,
                 2, 1, 3
         });
-        setArray(new float[]{
-                -1.0f, -1.0f,
+        setArray(-1.0f, -1.0f,
                 -0.7f, -1.0f,
                 -1.0f, -0.7f,
-                -0.7f, -0.7f
-        });
+                -0.7f, -0.7f);
         setShader(
                 "/* Vertex Shader */" +
                         "attribute vec2 vPosition;" +

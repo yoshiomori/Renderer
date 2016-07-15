@@ -23,7 +23,7 @@ public class YellowPointImage extends GLImage {
                         "}",
                 GL.GL_POINTS, 0, 1
         );
-        setAttribute("position", false, 0, new float[]{0f, 0f, 0f, 1f});
+        setAttribute("position", false, 0, 0f, 0f, 0f, 1f);
     }
 
     @Override

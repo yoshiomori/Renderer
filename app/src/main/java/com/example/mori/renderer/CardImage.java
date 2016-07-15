@@ -73,9 +73,9 @@ public class CardImage extends GLImage{
         );
         setAttribute("position", false, 0, 0);
 
-        setUniform("eye", new float[]{0f, 0f, -6f});
-        setUniform("center", new float[]{0f, 0f, 0f});
-        setUniform("up", new float[]{0f, 1f, 0f});
+        setUniform("eye", 0f, 0f, -6f);
+        setUniform("center", 0f, 0f, 0f);
+        setUniform("up", 0f, 1f, 0f);
         setUniform("card_coord", cardData.getCardCoord("As"));
 
         setTexture("texture", R.drawable.playing_cards);

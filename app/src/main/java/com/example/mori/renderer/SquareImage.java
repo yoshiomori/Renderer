@@ -26,12 +26,11 @@ public class SquareImage extends GLImage {
                         2, 1, 3
                 }
         );
-        setAttribute("position", false, 0, new float[]{
+        setAttribute("position", false, 0,
                 -1.0f, 1.0f, 0.0f, 1.0f,
                 -0.7f, 1.0f, 0.0f, 1.0f,
                 -1.0f, 0.7f, 0.0f, 1.0f,
-                -0.7f, 0.7f, 0.0f, 1.0f
-        });
+                -0.7f, 0.7f, 0.0f, 1.0f);
     }
 
     @Override

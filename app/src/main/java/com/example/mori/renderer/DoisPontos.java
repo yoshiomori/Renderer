@@ -9,7 +9,7 @@ import android.content.Context;
 public class DoisPontos extends GLImage {
     public DoisPontos(Context applicationContext){
         super(applicationContext);
-        setArray(new float[]{-0.5f, 0.0f, 0.5f, 0.5f});
+        setArray(-0.5f, 0.0f, 0.5f, 0.5f);
         setShader(
                 "/* Vertex Shader */" +
                         "attribute vec2 vPosition;" +

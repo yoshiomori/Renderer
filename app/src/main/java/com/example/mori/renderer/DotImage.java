@@ -10,8 +10,8 @@ import android.content.Context;
 public class DotImage extends GLImage {
     public DotImage(Context applicationContext){
         super(applicationContext);
-        setArray(new float[]{0.0f, 0.5f});
-        setUniform("color", new float[]{0.5f, 0.0f, 0.5f, 0.1f});
+        setArray(0.0f, 0.5f);
+        setUniform("color", 0.5f, 0.0f, 0.5f, 0.1f);
         setShader(
                 "/* Vertex Shader */" +
                         "attribute vec2 vPosition;" +

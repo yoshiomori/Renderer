@@ -55,7 +55,7 @@ public abstract class GLImage {
         }
     }
 
-    protected void setAttribute(String name, Boolean normalized, int stride, float[] array){
+    protected void setAttribute(String name, Boolean normalized, int stride, float... array){
         if (attributeIndexes.containsKey(name)) {
             GLAttribute attribute = attributes.get(attributeIndexes.get(name));
             attribute.setNormalized(normalized);
@@ -68,7 +68,7 @@ public abstract class GLImage {
         }
     }
 
-    protected void setUniform(String name, float[] array){
+    protected void setUniform(String name, float... array){
         if (uniformIndexes.containsKey(name)) {
             GLUniform uniform = uniforms.get(uniformIndexes.get(name));
             uniform.setArray(array);
@@ -101,12 +101,12 @@ public abstract class GLImage {
         }
     }
 
-    protected void setArray(float[] array) {
+    protected void setArray(float... array) {
         assert array != null;
         this.array = array;
     }
 
-    protected void setElementArray(short[] elementArray) {
+    protected void setElementArray(short... elementArray) {
         assert elementArray != null;
         this.elementArray = elementArray;
     }
@@ -125,7 +125,7 @@ public abstract class GLImage {
         this.count = count;
     }
 
-    protected void setShader(String vertexShaderCode, String fragmentShaderCode, int mode, int count,  short[] indices) {
+    protected void setShader(String vertexShaderCode, String fragmentShaderCode, int mode, int count,  short... indices) {
         this.vertexShaderCode = vertexShaderCode;
         this.fragmentShaderCode = fragmentShaderCode;
         this.mode = mode;
