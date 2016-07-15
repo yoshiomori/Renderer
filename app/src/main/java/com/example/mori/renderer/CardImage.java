@@ -2,6 +2,8 @@ package com.example.mori.renderer;
 
 import android.content.Context;
 
+import java.util.HashMap;
+
 /**
  * Desenhando uma carta de baralho
  * Created by mori on 15/07/16.
@@ -17,6 +19,8 @@ public class CardImage extends GLImage{
                         "attribute vec3 position;" +
                         "uniform float right, left, top, bottom, near, far;" +
                         "uniform vec3 eye, center, up;" +
+                        "uniform vec2 card_coord;" +
+                        "varying vec2 texture_coord;" +
                         "mat4 frustum() {" +
                         "   float r_width  = 1.0 / (right - left);" +
                         "   float r_height = 1.0 / (top - bottom);" +
@@ -46,13 +50,24 @@ public class CardImage extends GLImage{
                         "               0, 0, 0, 1)" +
                         "       * translate(-eye.x, -eye.y, -eye.z);" +
                         "}" +
+                        "mat4 scale(float x, float y, float z) {" +
+                        "   return mat4(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1);" +
+                        "}" +
                         "void main() {" +
-                        "   gl_Position = frustum() * look_at() * vec4(position, 1);" +
+                        "   vec4 vertex = vec4(position, 1);" +
+                        "   texture_coord = (scale(0.1998355263, 0.0769158494, 1) " +
+                        "                   * translate(card_coord.x, card_coord.y, 0) " +
+                        "                   * scale(0.561449, 0.787840, 1) " +
+                        "                   * translate(0.890552, 0.634646, 0) " +
+                        "                   * vertex).xy;" +
+                        "   gl_Position = frustum() * look_at() * vertex;" +
                         "}",
                 "/* Fragment Shader */" +
                         "precision mediump float;" +
+                        "uniform sampler2D texture;" +
+                        "varying vec2 texture_coord;" +
                         "void main() {" +
-                        "   gl_FragColor = vec4(1, 1, 0, 1);" +
+                        "   gl_FragColor = texture2D(texture, texture_coord);" +
                         "}",
                 GL.GL_TRIANGLES, 0, cardData.getCount()
         );
@@ -61,6 +76,9 @@ public class CardImage extends GLImage{
         setUniform("eye", new float[]{0f, 0f, -6f});
         setUniform("center", new float[]{0f, 0f, 0f});
         setUniform("up", new float[]{0f, 1f, 0f});
+        setUniform("card_coord", cardData.getCardCoord("As"));
+
+        setTexture("texture", R.drawable.playing_cards);
     }
 
     @Override
@@ -75,6 +93,7 @@ public class CardImage extends GLImage{
     }
 
     private class CardData {
+        private HashMap<String, float[]> cardImage = new HashMap<>();
         private float[] array;
         private short[] elementArray;
         private int count;
@@ -521,6 +540,62 @@ public class CardImage extends GLImage{
                     3, 309, 310, 311};
 
             count = elementArray.length;
+
+            cardImage.put("Joker Black", new float[] {0f, 0f});
+            cardImage.put("As", new float[] {1f, 0f});
+            cardImage.put("Ah", new float[] {2f, 0f});
+            cardImage.put("Ad", new float[] {3f, 0f});
+            cardImage.put("Ac", new float[] {4f, 0f});
+            cardImage.put("Joker Red", new float[] {0f, 1f});
+            cardImage.put("2s", new float[] {1f, 1f});
+            cardImage.put("2h", new float[] {2f, 1f});
+            cardImage.put("2d", new float[] {3f, 1f});
+            cardImage.put("2c", new float[] {4f, 1f});
+            cardImage.put("Back", new float[] {0f, 2f});
+            cardImage.put("3s", new float[] {1f, 2f});
+            cardImage.put("3h", new float[] {2f, 2f});
+            cardImage.put("3d", new float[] {3f, 2f});
+            cardImage.put("3c", new float[] {4f, 2f});
+            cardImage.put("4s", new float[] {1f, 3f});
+            cardImage.put("4h", new float[] {2f, 3f});
+            cardImage.put("4d", new float[] {3f, 3f});
+            cardImage.put("4c", new float[] {4f, 3f});
+            cardImage.put("5s", new float[] {1f, 4f});
+            cardImage.put("5h", new float[] {2f, 4f});
+            cardImage.put("5d", new float[] {3f, 4f});
+            cardImage.put("5c", new float[] {4f, 4f});
+            cardImage.put("6s", new float[] {1f, 5f});
+            cardImage.put("6h", new float[] {2f, 5f});
+            cardImage.put("6d", new float[] {3f, 5f});
+            cardImage.put("6c", new float[] {4f, 5f});
+            cardImage.put("7s", new float[] {1f, 6f});
+            cardImage.put("7h", new float[] {2f, 6f});
+            cardImage.put("7d", new float[] {3f, 6f});
+            cardImage.put("7c", new float[] {4f, 6f});
+            cardImage.put("8s", new float[] {1f, 7f});
+            cardImage.put("8h", new float[] {2f, 7f});
+            cardImage.put("8d", new float[] {3f, 7f});
+            cardImage.put("8c", new float[] {4f, 7f});
+            cardImage.put("9s", new float[] {1f, 8f});
+            cardImage.put("9h", new float[] {2f, 8f});
+            cardImage.put("9d", new float[] {3f, 8f});
+            cardImage.put("9c", new float[] {4f, 8f});
+            cardImage.put("Ts", new float[] {1f, 9f});
+            cardImage.put("Th", new float[] {2f, 9f});
+            cardImage.put("Td", new float[] {3f, 9f});
+            cardImage.put("Tc", new float[] {4f, 9f});
+            cardImage.put("Js", new float[] {1f, 10f});
+            cardImage.put("Jh", new float[] {2f, 10f});
+            cardImage.put("Jd", new float[] {3f, 10f});
+            cardImage.put("Jc", new float[] {4f, 10f});
+            cardImage.put("Qs", new float[] {1f, 11f});
+            cardImage.put("Qh", new float[] {2f, 11f});
+            cardImage.put("Qd", new float[] {3f, 11f});
+            cardImage.put("Qc", new float[] {4f, 11f});
+            cardImage.put("Ks", new float[] {1f, 12f});
+            cardImage.put("Kh", new float[] {2f, 12f});
+            cardImage.put("Kd", new float[] {3f, 12f});
+            cardImage.put("Kc", new float[] {4f, 12f});
         }
 
         public float[] getArray() {
@@ -533,6 +608,13 @@ public class CardImage extends GLImage{
 
         public int getCount() {
             return count;
+        }
+
+        public float[] getCardCoord(String cardName) {
+            if (!cardImage.containsKey(cardName)) {
+                throw new RuntimeException(cardName + " não é nome de carta válido!");
+            }
+            return cardImage.get(cardName);
         }
     }
 }
