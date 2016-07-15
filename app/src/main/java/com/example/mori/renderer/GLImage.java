@@ -31,6 +31,8 @@ public abstract class GLImage {
     private Bitmap bitmap = null;
     private int textureIndex = -1;
     private Context context;
+    private HashMap<String, Integer> attributeIndexes = new HashMap<>();
+    private HashMap<String, Integer> uniformIndexes = new HashMap<>();
 
     protected GLImage(Context context) {
         this.context = context;
@@ -42,19 +44,51 @@ public abstract class GLImage {
     }
 
     protected void setAttribute(String name, Boolean normalized, int stride, int offset){
-        attributes.add(new GLAttribute(name, normalized, stride, offset));
+        if (attributeIndexes.containsKey(name)) {
+            GLAttribute attribute = attributes.get(attributeIndexes.get(name));
+            attribute.setNormalized(normalized);
+            attribute.setStride(stride);
+            attribute.setOffset(offset);
+        }
+        else {
+            attributeIndexes.put(name, attributes.size());
+            attributes.add(new GLAttribute(name, normalized, stride, offset));
+        }
     }
 
-    protected void setAttribute(String name, Boolean normalized, int stride, float[] floats){
-        attributes.add(new GLAttribute(name, normalized, stride, floats));
+    protected void setAttribute(String name, Boolean normalized, int stride, float[] array){
+        if (attributeIndexes.containsKey(name)) {
+            GLAttribute attribute = attributes.get(attributeIndexes.get(name));
+            attribute.setNormalized(normalized);
+            attribute.setStride(stride);
+            attribute.setArray(array);
+        }
+        else {
+            attributeIndexes.put(name, attributes.size());
+            attributes.add(new GLAttribute(name, normalized, stride, array));
+        }
     }
 
     protected void setUniform(String name, float[] array){
-        uniforms.add(new GLUniform(name, array));
+        if (uniformIndexes.containsKey(name)) {
+            GLUniform uniform = uniforms.get(uniformIndexes.get(name));
+            uniform.setArray(array);
+        }
+        else {
+            uniformIndexes.put(name, uniforms.size());
+            uniforms.add(new GLUniform(name, array));
+        }
     }
 
     protected void setUniform(String name, int x){
-        uniforms.add(new GLUniform(name, x));
+        if (uniformIndexes.containsKey(name)) {
+            GLUniform uniform = uniforms.get(uniformIndexes.get(name));
+            uniform.setX(x);
+        }
+        else {
+            uniformIndexes.put(name, uniforms.size());
+            uniforms.add(new GLUniform(name, x));
+        }
     }
 
     protected void setArray(float[] array) {

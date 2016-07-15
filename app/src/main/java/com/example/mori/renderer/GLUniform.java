@@ -5,20 +5,18 @@ package com.example.mori.renderer;
  * Created by mori on 09/07/16.
  */
 public class GLUniform {
-    private int x;
-    private String name;
-    private float[] array;
+    private int x = 0;
+    private String name = "";
+    private float[] array = null;
 
     public GLUniform(String name, float[] array) {
         this.name = name;
         this.array = array;
-        x = 0;
     }
 
     public GLUniform(String name, int x) {
         this.name = name;
         this.x = x;
-        array = null;
     }
 
     public String getName() {
@@ -39,5 +37,9 @@ public class GLUniform {
 
     public int getX() {
         return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
     }
 }

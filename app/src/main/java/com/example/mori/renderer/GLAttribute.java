@@ -7,11 +7,11 @@ import java.nio.Buffer;
  * Created by mori on 09/07/16.
  */
 public class GLAttribute {
-    private final String name;
-    private final boolean normalized;
-    private final int stride;
-    private final int offset;
-    private final Buffer array;
+    private String name = "";
+    private boolean normalized = false;
+    private int stride = -1;
+    private int offset = -1;
+    private Buffer array = null;
 
     /**
      * Construtor
@@ -25,7 +25,6 @@ public class GLAttribute {
         this.normalized = normalized;
         this.stride = stride;
         this.offset = offset;
-        this.array = null;
     }
 
     /**
@@ -40,7 +39,6 @@ public class GLAttribute {
         this.normalized = normalized;
         this.stride = stride;
         this.array = GLBuffers.adapt(array);
-        this.offset = -1;
     }
 
     public String getName() {
@@ -61,5 +59,21 @@ public class GLAttribute {
 
     public Buffer getArray() {
         return array;
+    }
+
+    public void setNormalized(boolean normalized) {
+        this.normalized = normalized;
+    }
+
+    public void setStride(int stride) {
+        this.stride = stride;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public void setArray(float[] array) {
+        this.array = GLBuffers.adapt(array);
     }
 }
