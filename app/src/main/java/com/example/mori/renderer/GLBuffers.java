@@ -12,6 +12,7 @@ import java.nio.ShortBuffer;
  */
 public class GLBuffers {
     private int[] buffers;
+    private int[] params;
 
     public GLBuffers(GLImage[] arrays, int bufferSize) {
         buffers = new int[bufferSize];
@@ -25,6 +26,7 @@ public class GLBuffers {
                 loadArray(adapt(image.getElementArray()), image.getElementArrayIndex());
             }
         }
+        params = new int[2];
     }
 
     private void loadArray(Buffer buffer, int indice) {
@@ -51,14 +53,26 @@ public class GLBuffers {
     }
 
     public void bindArrayBuffer(int arrayIndex) {
-        GL.glBindBuffer(GL.GL_ARRAY_BUFFER, arrayIndex >= 0 ? buffers[arrayIndex] : 0);
+        int buffer = arrayIndex < 0 ? 0 : buffers[arrayIndex];
+        if (getArrayBufferBound() != buffer) {
+            GL.glBindBuffer(GL.GL_ARRAY_BUFFER, buffer);
+        }
+    }
+
+    private int getArrayBufferBound() {
+        GL.glGetIntegerv(GL.GL_ARRAY_BUFFER_BINDING, params, 0);
+        return params[0];
     }
 
     public void bindElementArrayBuffer(int elementArrayIndex) {
-        GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, buffers[elementArrayIndex]);
+        int buffer = elementArrayIndex < 0 ? 0 : buffers[elementArrayIndex];
+        if (getElementArrayBufferBound() != buffer) {
+            GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, buffer);
+        }
     }
 
-    public void unbindElementArrayBuffer() {
-        GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, 0);
+    private int getElementArrayBufferBound() {
+        GL.glGetIntegerv(GL.GL_ELEMENT_ARRAY_BUFFER_BINDING, params, 1);
+        return params[1];
     }
 }

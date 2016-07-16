@@ -45,6 +45,10 @@ public class GL{
     public static final int GL_TEXTURE_WRAP_T = GLES20.GL_TEXTURE_WRAP_T;
     public static final int GL_COLOR_BUFFER_BIT = GLES20.GL_COLOR_BUFFER_BIT;
     public static final int GL_DEPTH_BUFFER_BIT = GLES20.GL_DEPTH_BUFFER_BIT;
+    public static final int GL_ARRAY_BUFFER_BINDING = GLES20.GL_ARRAY_BUFFER_BINDING;
+    public static final int GL_ELEMENT_ARRAY_BUFFER_BINDING = GLES20.GL_ELEMENT_ARRAY_BUFFER_BINDING;
+    public static final int GL_TEXTURE_BINDING_2D = GLES20.GL_TEXTURE_BINDING_2D;
+    public static final int GL_ACTIVE_TEXTURE = GLES20.GL_ACTIVE_TEXTURE;
 
     private static void checkGlError(String glOperation) {
         int error;
@@ -238,5 +242,10 @@ public class GL{
     public static void glClear(int mask) {
         GLES20.glClear(mask);
         checkGlError("glClear");
+    }
+
+    public static void glGetIntegerv(int pname, int[] params, int offset) {
+        GLES20.glGetIntegerv(pname, params, offset);
+        checkGlError("glGetIntegerv");
     }
 }

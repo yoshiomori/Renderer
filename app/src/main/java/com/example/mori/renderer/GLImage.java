@@ -248,6 +248,7 @@ public abstract class GLImage {
     public void render(GLBuffers buffers, GLTextures textures) {
         GL.glUseProgram(program);
         buffers.bindArrayBuffer(arrayIndex);
+        buffers.bindElementArrayBuffer(elementArrayIndex);
         textures.bindTextures(textureIndex);
         defineAttributes();
         defineUniforms();
@@ -255,9 +256,7 @@ public abstract class GLImage {
             GL.glDrawElements(mode, count, GL.GL_UNSIGNED_SHORT, indices);
         }
         else if (elementArrayIndex >= 0){
-            buffers.bindElementArrayBuffer(elementArrayIndex);
             GL.glDrawElements(mode, count, GL.GL_UNSIGNED_SHORT, first);
-            buffers.unbindElementArrayBuffer();
         }
         else {
             GL.glDrawArrays(mode, first, count);

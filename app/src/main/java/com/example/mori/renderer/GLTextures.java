@@ -11,6 +11,8 @@ import java.nio.ByteBuffer;
  */
 public class GLTextures {
     int[] textures;
+    private int[] params;
+
     public GLTextures(GLImage[] images, int texturesSize) {
         textures = new int[texturesSize];
         GL.glGenTextures(texturesSize, textures, 0);
@@ -32,6 +34,7 @@ public class GLTextures {
                 GL.glBindTexture(GL.GL_TEXTURE_2D, 0);
             }
         }
+        params = new int[2];
     }
 
     public static Buffer adapt(Bitmap data) {
@@ -42,8 +45,22 @@ public class GLTextures {
     }
 
     public void bindTextures(int textureIndex) {
+        int texture = textureIndex < 0 ? 0 : this.textures[textureIndex];
+        if (getActiveTexture() != GL.GL_TEXTURE0) {
             GL.glActiveTexture(GL.GL_TEXTURE0);
-            GL.glBindTexture(GL.GL_TEXTURE_2D,
-                    textureIndex < 0 ? 0 : this.textures[textureIndex]);
+        }
+        if (getTexture2DBound() != texture) {
+            GL.glBindTexture(GL.GL_TEXTURE_2D, texture);
+        }
+    }
+
+    private int getActiveTexture() {
+        GL.glGetIntegerv(GL.GL_ACTIVE_TEXTURE, params, 0);
+        return params[0];
+    }
+
+    private int getTexture2DBound() {
+        GL.glGetIntegerv(GL.GL_TEXTURE_BINDING_2D, params, 1);
+        return params[1];
     }
 }
