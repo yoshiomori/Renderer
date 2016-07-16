@@ -1,15 +1,12 @@
 package com.example.mori.renderer;
 
-import android.content.res.Resources;
-
 /**
  * Abstração de imagem de ponto.
  * Demostração de atribuir dados à uniform.
  * Created by mori on 09/07/16.
  */
 public class DotImage extends GLImage {
-    public DotImage(Resources resources){
-        super(resources);
+    public DotImage(){
         setArray(0.0f, 0.5f);
         setUniform("color", 0.5f, 0.0f, 0.5f, 0.1f);
         setShader(

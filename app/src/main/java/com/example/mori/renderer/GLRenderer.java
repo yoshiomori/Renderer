@@ -16,7 +16,12 @@ public class GLRenderer implements GLSurfaceView.Renderer{
     private GLBuffers buffers = null;
     private GLTextures textures;
 
-    public GLRenderer(GLImage... images) {
+    public void setImages(GLImage... images) {
+        this.images = images;
+    }
+
+    @Override
+    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         for (GLImage image :
                 images) {
             if (image.getArray() != null) {
@@ -36,17 +41,20 @@ public class GLRenderer implements GLSurfaceView.Renderer{
             image.setTextureIndex(texturesSize++);
         }
 
-        this.images = images;
-    }
-
-    @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         // Set the background frame color
         GL.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+        loadDatas();
         loadBuffers();
         loadUnits();
         loadShaderProgram();
+    }
+
+    private void loadDatas() {
+        for (GLImage image :
+                images) {
+            image.loadDatas();
+        }
     }
 
     private void loadUnits() {

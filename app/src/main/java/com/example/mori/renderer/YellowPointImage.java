@@ -1,14 +1,11 @@
 package com.example.mori.renderer;
 
-import android.content.res.Resources;
-
 /**
  * Demostração de desenho sem array e element array.
  * Created by mori on 15/07/16.
  */
 public class YellowPointImage extends GLImage {
-    public YellowPointImage(Resources resources) {
-        super(resources);
+    public YellowPointImage() {
         setShader(
                 "/* Vertex Shader */" +
                         "attribute vec4 position;" +

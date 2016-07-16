@@ -1,7 +1,5 @@
 package com.example.mori.renderer;
 
-import android.content.res.Resources;
-
 import java.util.HashMap;
 
 /**
@@ -9,8 +7,7 @@ import java.util.HashMap;
  * Created by mori on 15/07/16.
  */
 public class CardImage extends GLImage{
-    public CardImage(Resources resources) {
-        super(resources);
+    public CardImage() {
         CardData cardData = new CardData();
         setArray(cardData.getArray());
         setElementArray(cardData.getElementArray());

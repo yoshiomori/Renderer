@@ -2,7 +2,6 @@ package com.example.mori.renderer;
 
 
 import android.app.Activity;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
 public class MainActivity extends Activity{
@@ -12,6 +11,16 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
 
         GLScreen screen = new GLScreen(this);
+        screen.setImages(
+                new DotImage(),
+                new TrianglesImage(),
+                new DoisPontos(),
+                new SquareBlueImage(),
+                new SquareTextureImage(),
+                new SquareImage(),
+                new YellowPointImage(),
+                new CardImage()
+        );
         setContentView(screen);
     }
 }

@@ -28,19 +28,16 @@ public abstract class GLImage {
     private Buffer indices = null;
     private int count = -1;
     private int[] uniformType = null;
-    private Bitmap bitmap = null;
+    private Bitmap bitmap;
     private int textureIndex = -1;
     private Resources resources;
     private HashMap<String, Integer> attributeIndexes = new HashMap<>();
     private HashMap<String, Integer> uniformIndexes = new HashMap<>();
-
-    protected GLImage(Resources resources) {
-        this.resources = resources;
-    }
+    private int bitmapId = -1;
 
     public void setTexture(String name, int id) {
         setUniform(name, 0);
-        this.bitmap = BitmapFactory.decodeResource(resources, id);
+        bitmapId = id;
     }
 
     protected void setAttribute(String name, Boolean normalized, int stride, int offset){
@@ -356,4 +353,12 @@ public abstract class GLImage {
     }
 
     public abstract void onSurfaceChanged(int width, int height);
+
+    public void setResources(Resources resources) {
+        this.resources = resources;
+    }
+
+    public void loadDatas() {
+        this.bitmap = bitmapId < 0 ? null : BitmapFactory.decodeResource(resources, bitmapId);
+    }
 }
