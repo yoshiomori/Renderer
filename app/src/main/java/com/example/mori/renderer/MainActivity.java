@@ -11,19 +11,7 @@ public class MainActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        GLSurfaceView screen = new GLSurfaceView(this);
-        screen.setEGLContextClientVersion(2);
-        screen.setRenderer(new GLRenderer(
-                new DotImage(getApplicationContext()),
-                new TrianglesImage(getApplicationContext()),
-                new DoisPontos(getApplicationContext()),
-                new SquareBlueImage(getApplicationContext()),
-                new SquareTextureImage(getApplicationContext()),
-                new SquareImage(getApplicationContext()),
-                new YellowPointImage(getApplicationContext()),
-                new CardImage(getApplicationContext())
-        ));
-        screen.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        GLScreen screen = new GLScreen(this);
         setContentView(screen);
     }
 }

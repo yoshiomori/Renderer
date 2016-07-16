@@ -1,14 +1,14 @@
 package com.example.mori.renderer;
 
-import android.content.Context;
+import android.content.res.Resources;
 
 /**
  * Demostração de uso de textura.
  * Created by mori on 12/07/16.
  */
 public class SquareTextureImage extends GLImage {
-    public SquareTextureImage (Context context) {
-        super(context);
+    public SquareTextureImage (Resources resources) {
+        super(resources);
         setElementArray(new short[]{
                 0, 1, 2,
                 2, 1, 3

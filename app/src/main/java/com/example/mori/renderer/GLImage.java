@@ -1,6 +1,7 @@
 package com.example.mori.renderer;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -29,17 +30,17 @@ public abstract class GLImage {
     private int[] uniformType = null;
     private Bitmap bitmap = null;
     private int textureIndex = -1;
-    private Context context;
+    private Resources resources;
     private HashMap<String, Integer> attributeIndexes = new HashMap<>();
     private HashMap<String, Integer> uniformIndexes = new HashMap<>();
 
-    protected GLImage(Context context) {
-        this.context = context;
+    protected GLImage(Resources resources) {
+        this.resources = resources;
     }
 
     public void setTexture(String name, int id) {
         setUniform(name, 0);
-        this.bitmap = BitmapFactory.decodeResource(context.getResources(), id);
+        this.bitmap = BitmapFactory.decodeResource(resources, id);
     }
 
     protected void setAttribute(String name, Boolean normalized, int stride, int offset){

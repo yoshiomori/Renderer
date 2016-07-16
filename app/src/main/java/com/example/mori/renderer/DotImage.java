@@ -1,6 +1,6 @@
 package com.example.mori.renderer;
 
-import android.content.Context;
+import android.content.res.Resources;
 
 /**
  * Abstração de imagem de ponto.
@@ -8,8 +8,8 @@ import android.content.Context;
  * Created by mori on 09/07/16.
  */
 public class DotImage extends GLImage {
-    public DotImage(Context applicationContext){
-        super(applicationContext);
+    public DotImage(Resources resources){
+        super(resources);
         setArray(0.0f, 0.5f);
         setUniform("color", 0.5f, 0.0f, 0.5f, 0.1f);
         setShader(
