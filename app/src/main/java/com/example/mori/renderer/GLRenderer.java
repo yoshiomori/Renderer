@@ -9,14 +9,14 @@ import javax.microedition.khronos.opengles.GL10;
  * Menu principal do app.
  * Created by mori on 06/07/16.
  */
-public class Renderer implements GLSurfaceView.Renderer{
+public class GLRenderer implements GLSurfaceView.Renderer{
     private GLImage[] images;
     private int bufferSize = 0;
     private int texturesSize = 0;
     private GLBuffers buffers = null;
     private GLTextures textures;
 
-    public Renderer(GLImage... images) {
+    public GLRenderer(GLImage... images) {
         for (GLImage image :
                 images) {
             if (image.getArray() != null) {

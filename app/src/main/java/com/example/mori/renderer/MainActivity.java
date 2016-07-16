@@ -13,7 +13,7 @@ public class MainActivity extends Activity{
 
         GLSurfaceView screen = new GLSurfaceView(this);
         screen.setEGLContextClientVersion(2);
-        screen.setRenderer(new Renderer(
+        screen.setRenderer(new GLRenderer(
                 new DotImage(getApplicationContext()),
                 new TrianglesImage(getApplicationContext()),
                 new DoisPontos(getApplicationContext()),
