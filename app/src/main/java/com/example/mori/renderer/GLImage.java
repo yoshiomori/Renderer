@@ -361,4 +361,8 @@ public abstract class GLImage {
     public void loadDatas() {
         this.bitmap = bitmapId < 0 ? null : BitmapFactory.decodeResource(resources, bitmapId);
     }
+
+    public int getBitmapId() {
+        return bitmapId;
+    }
 }

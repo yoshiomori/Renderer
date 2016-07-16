@@ -30,15 +30,13 @@ public class GLRenderer implements GLSurfaceView.Renderer{
             if (image.getElementArray() != null) {
                 image.setElementArrayIndex(bufferSize++);
             }
+            if (image.getBitmapId() >= 0) {
+                image.setTextureIndex(texturesSize++);
+            }
             if (image.getVertexShaderCode() == null | image.getFragmentShaderCode() == null) {
                 throw new RuntimeException("Shader deve ser configurado. " +
                         "Utilize o método setShader da class GLImage!");
             }
-        }
-
-        for (GLImage image :
-                images) {
-            image.setTextureIndex(texturesSize++);
         }
 
         // Set the background frame color
