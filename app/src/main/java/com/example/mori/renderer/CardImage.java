@@ -7,16 +7,21 @@ import java.util.HashMap;
  * Created by mori on 15/07/16.
  */
 public class CardImage extends GLImage{
+//    private final float[] invMMVPMatrix;
+//    private float[] v = new float[4];
+//    private ArrayList<Card> selectCards;
+//    private ArrayList<Card> cards = new ArrayList<>();
+
     public CardImage() {
         CardData cardData = new CardData();
         setArray(cardData.getArray());
         setElementArray(cardData.getElementArray());
         setShader(
                 "/* Vertex Shader */" +
-                        "attribute vec3 position;" +
+                        "attribute vec3 vertex;" +
                         "uniform float right, left, top, bottom, near, far;" +
                         "uniform vec3 eye, center, up;" +
-                        "uniform vec2 card_coord;" +
+                        "uniform vec2 card_coord, position;" +
                         "varying vec2 texture_coord;" +
                         "mat4 frustum() {" +
                         "   float r_width  = 1.0 / (right - left);" +
@@ -51,13 +56,14 @@ public class CardImage extends GLImage{
                         "   return mat4(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1);" +
                         "}" +
                         "void main() {" +
-                        "   vec4 vertex = vec4(position, 1);" +
+                        "   vec4 vertex = vec4(vertex, 1);" +
                         "   texture_coord = (scale(0.1998355263, 0.0769158494, 1) " +
                         "                   * translate(card_coord.x, card_coord.y, 0) " +
                         "                   * scale(0.561449, 0.787840, 1) " +
                         "                   * translate(0.890552, 0.634646, 0) " +
                         "                   * vertex).xy;" +
-                        "   gl_Position = frustum() * look_at() * vertex;" +
+                        "   gl_Position = frustum() * look_at()" +
+                        "               * translate(position.x, position.y, 0) * vertex;" +
                         "}",
                 "/* Fragment Shader */" +
                         "precision mediump float;" +
@@ -68,15 +74,55 @@ public class CardImage extends GLImage{
                         "}",
                 GL.GL_TRIANGLES, 0, cardData.getCount()
         );
-        setAttribute("position", false, 0, 0);
+        setAttribute("vertex", false, 0, 0);
 
         setUniform("eye", 0f, 0f, -6f);
         setUniform("center", 0f, 0f, 0f);
         setUniform("up", 0f, 1f, 0f);
-        setUniform("card_coord", cardData.getCardCoord("As"));
 
         setTexture("texture", R.drawable.playing_cards);
+
+        setPositionName("position");
+        setColorName("card_coord");
+
+        addObject(new float[] {0.5f, 0.5f}, cardData.getCardCoord("As"));
+        addObject(new float[] {-0.5f, -0.5f}, cardData.getCardCoord("Back"));
+
+//        // Set the camera position (View matrix)
+//        float[] mViewMatrix = new float[16];
+//        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+//
+//        // Calculate the projection and view transformation
+//        float[] mMVPMatrix = new float[16];
+//        float[] mProjectionMatrix = new float[16];
+//        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+//        invMMVPMatrix = new float[16];
+//        Matrix.invertM(invMMVPMatrix, 0 , mMVPMatrix, 0);
     }
+
+//    private class Card{
+//        private final String cardName;
+//        private final float x;
+//        private final float y;
+//
+//        public Card(String cardName, float x, float y) {
+//            this.cardName = cardName;
+//            this.x = x;
+//            this.y = y;
+//        }
+//
+//        public String getCardName() {
+//            return cardName;
+//        }
+//
+//        public float getX() {
+//            return x;
+//        }
+//
+//        public float getY() {
+//            return y;
+//        }
+//    }
 
     @Override
     public void onSurfaceChanged(int width, int height) {
@@ -87,6 +133,26 @@ public class CardImage extends GLImage{
         setUniform("top", 1f);
         setUniform("near", 3f);
         setUniform("far", 7f);
+    }
+
+    @Override
+    public void onMove(float dx, float dy, float x, float y) {
+//        for (Card)
+    }
+
+    @Override
+    public void onDown(float x, float y) {
+//        Matrix.multiplyMV(v, 0, invMMVPMatrix, 0, new float[]{x, y, 0, 0}, 0);
+//        for(Card card: ) {
+//            float[] position = card.getPosition();
+//            if (Math.abs(position[0] - x) <= 0.890552f && Math.abs(position[1] - y) <= 0.634646f) {
+//                selectCards.add(card);
+//            }
+//        }
+    }
+
+    @Override
+    public void onUp() {
     }
 
     private class CardData {

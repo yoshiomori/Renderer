@@ -1,6 +1,5 @@
 package com.example.mori.renderer;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -34,6 +33,9 @@ public abstract class GLImage {
     private HashMap<String, Integer> attributeIndexes = new HashMap<>();
     private HashMap<String, Integer> uniformIndexes = new HashMap<>();
     private int bitmapId = -1;
+    private String positionName = "";
+    private ArrayList<GLObject> objects = new ArrayList<>();
+    private String colorName = "";
 
     public void setTexture(String name, int id) {
         setUniform(name, 0);
@@ -250,13 +252,34 @@ public abstract class GLImage {
         textures.bindTextures(textureIndex);
         defineAttributes();
         defineUniforms();
+        if (positionName.isEmpty()) {
+            draw();
+        } else {
+            for (GLObject object :
+                    objects) {
+                setUniform(positionName, object.getPosition());
+                defineUniform(getLocation(positionName), getUniform(positionName));
+                setUniform(colorName, object.getColor());
+                defineUniform(getLocation(colorName), getUniform(colorName));
+                draw();
+            }
+        }
+    }
+
+    private int getLocation(String uniformName) {
+        return uniformLocation.get(uniformName);
+    }
+
+    private GLUniform getUniform(String uniformName) {
+        return uniforms.get(uniformIndexes.get(uniformName));
+    }
+
+    private void draw() {
         if (indices != null) {
             GL.glDrawElements(mode, count, GL.GL_UNSIGNED_SHORT, indices);
-        }
-        else if (elementArrayIndex >= 0){
+        } else if (elementArrayIndex >= 0) {
             GL.glDrawElements(mode, count, GL.GL_UNSIGNED_SHORT, first);
-        }
-        else {
+        } else {
             GL.glDrawArrays(mode, first, count);
         }
     }
@@ -304,39 +327,45 @@ public abstract class GLImage {
                 uniforms) {
             int location;
             String uniformName = uniform.getName();
-            if (uniformLocation.containsKey(uniformName)) {
+            if (uniformLocation.containsKey(uniformName)
+                    & !uniformName.equals(positionName)
+                    & !uniformName.equals(colorName)) {
                 location = uniformLocation.get(uniformName);
-                if (uniformType[location] == GL.GL_FLOAT_VEC2) {
-                    GL.glUniform2fv(location, 1, uniform.getArray(), 0);
-                }
-                else if (uniformType[location] == GL.GL_FLOAT_VEC3) {
-                    GL.glUniform3fv(location, 1, uniform.getArray(), 0);
-                }
-                else if (uniformType[location] == GL.GL_FLOAT_VEC4) {
-                    GL.glUniform4fv(location, 1, uniform.getArray(), 0);
-                }
-                else if (uniformType[location] == GL.GL_FLOAT_MAT2) {
-                    GL.glUniformMatrix2fv(location, 1, false, uniform.getArray(), 0);
-                }
-                else if (uniformType[location] == GL.GL_FLOAT_MAT3) {
-                    GL.glUniformMatrix3fv(location, 1, false, uniform.getArray(), 0);
-                }
-                else if (uniformType[location] == GL.GL_FLOAT_MAT4) {
-                    GL.glUniformMatrix4fv(location, 1, false, uniform.getArray(), 0);
-                }
-                else if (uniformType[location] == GL.GL_SAMPLER_2D) {
-                    GL.glUniform1i(location, uniform.getXi());
-                }
-                else if (uniformType[location] == GL.GL_FLOAT) {
-                    GL.glUniform1f(location, uniform.getXf());
-                }
-                else {
-                    throw new RuntimeException("Caso não implementado: " + uniformType[location]);
-                }
+                defineUniform(location, uniform);
             }
             else {
                 System.out.println("Uniform " + uniformName + " definido mas não usado!");
             }
+        }
+    }
+
+    private void defineUniform(int location, GLUniform uniform) {
+        if (uniformType[location] == GL.GL_FLOAT_VEC2) {
+            GL.glUniform2fv(location, 1, uniform.getArray(), 0);
+        }
+        else if (uniformType[location] == GL.GL_FLOAT_VEC3) {
+            GL.glUniform3fv(location, 1, uniform.getArray(), 0);
+        }
+        else if (uniformType[location] == GL.GL_FLOAT_VEC4) {
+            GL.glUniform4fv(location, 1, uniform.getArray(), 0);
+        }
+        else if (uniformType[location] == GL.GL_FLOAT_MAT2) {
+            GL.glUniformMatrix2fv(location, 1, false, uniform.getArray(), 0);
+        }
+        else if (uniformType[location] == GL.GL_FLOAT_MAT3) {
+            GL.glUniformMatrix3fv(location, 1, false, uniform.getArray(), 0);
+        }
+        else if (uniformType[location] == GL.GL_FLOAT_MAT4) {
+            GL.glUniformMatrix4fv(location, 1, false, uniform.getArray(), 0);
+        }
+        else if (uniformType[location] == GL.GL_SAMPLER_2D) {
+            GL.glUniform1i(location, uniform.getXi());
+        }
+        else if (uniformType[location] == GL.GL_FLOAT) {
+            GL.glUniform1f(location, uniform.getXf());
+        }
+        else {
+            throw new RuntimeException("Caso não implementado: " + uniformType[location]);
         }
     }
 
@@ -364,5 +393,49 @@ public abstract class GLImage {
 
     public int getBitmapId() {
         return bitmapId;
+    }
+
+    public abstract void onMove(float dx, float dy, float x, float y);
+
+    public abstract void onDown(float x, float y);
+
+    public abstract void onUp();
+
+    private class GLObject {
+        private float[] position;
+        private float[] color;
+
+        public GLObject(float[] position) {
+            this.position = position;
+        }
+
+        public GLObject(float[] position, float[] color) {
+            this.position = position;
+            this.color = color;
+        }
+
+        public float[] getPosition() {
+            return position;
+        }
+
+        public float[] getColor() {
+            return color;
+        }
+    }
+
+    protected void addObject(float[] position) {
+        objects.add(new GLObject(position));
+    }
+
+    protected void addObject(float[] position, float[] color) {
+        objects.add(new GLObject(position, color));
+    }
+
+    protected void setPositionName(String uniformName) {
+        positionName = uniformName;
+    }
+
+    protected void setColorName(String uniformName) {
+        colorName = uniformName;
     }
 }
