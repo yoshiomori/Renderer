@@ -20,6 +20,7 @@ public class MainActivity extends Activity{
                 new SquareImage(),
                 new YellowPointImage(),
                 new CardImage(),
+                new NoCardImage(),
                 new TwoDots()
         );
         setContentView(screen);

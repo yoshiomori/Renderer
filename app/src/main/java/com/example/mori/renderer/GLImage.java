@@ -307,7 +307,7 @@ public abstract class GLImage {
             }
             draw();
         }
-        if (objects.isEmpty()) {
+        if (objects.isEmpty() & positionName.isEmpty() & colorName.isEmpty()) {
             draw();
         }
     }
