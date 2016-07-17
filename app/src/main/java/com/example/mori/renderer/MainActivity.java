@@ -19,7 +19,8 @@ public class MainActivity extends Activity{
                 new SquareTextureImage(),
                 new SquareImage(),
                 new YellowPointImage(),
-                new CardImage()
+                new CardImage(),
+                new TwoDots()
         );
         setContentView(screen);
     }
