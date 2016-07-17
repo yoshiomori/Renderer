@@ -16,7 +16,7 @@ public abstract class GLImage {
 
     private int arrayIndex = -1;
     private int elementArrayIndex = -1;
-    private ArrayList<GLAttribute> attributes = new ArrayList<>();
+    private HashMap<String, GLAttribute> attributes = new HashMap<>();
     private HashMap<String, GLUniform> uniforms = new HashMap<>();
     private float[] array = null;
     private short[] elementArray = null;
@@ -29,7 +29,6 @@ public abstract class GLImage {
     private Bitmap bitmap;
     private int textureIndex = -1;
     private Resources resources;
-    private HashMap<String, Integer> attributeIndexes = new HashMap<>();
     private int bitmapId = -1;
     private String positionName = "";
     private ArrayList<GLObject> objects = new ArrayList<>();
@@ -41,63 +40,65 @@ public abstract class GLImage {
     }
 
     protected void setAttribute(String name, Boolean normalized, int stride, int offset){
-        if (attributeIndexes.containsKey(name)) {
-            GLAttribute attribute = attributes.get(attributeIndexes.get(name));
-            attribute.setNormalized(normalized);
-            attribute.setStride(stride);
-            attribute.setOffset(offset);
+        GLAttribute attribute;
+        if (attributes.containsKey(name)) {
+            attribute = attributes.get(name);
         }
         else {
-            attributeIndexes.put(name, attributes.size());
-            attributes.add(new GLAttribute(name, normalized, stride, offset));
+            attribute = new GLAttribute();
+            attributes.put(name, attribute);
         }
+        attribute.setNormalized(normalized);
+        attribute.setStride(stride);
+        attribute.setValue(offset);
     }
 
     protected void setAttribute(String name, Boolean normalized, int stride, float... array){
-        if (attributeIndexes.containsKey(name)) {
-            GLAttribute attribute = attributes.get(attributeIndexes.get(name));
-            attribute.setNormalized(normalized);
-            attribute.setStride(stride);
-            attribute.setArray(array);
+        GLAttribute attribute;
+        if (attributes.containsKey(name)) {
+            attribute = attributes.get(name);
         }
         else {
-            attributeIndexes.put(name, attributes.size());
-            attributes.add(new GLAttribute(name, normalized, stride, array));
+            attribute = new GLAttribute();
+            attributes.put(name, attribute);
         }
+        attribute.setNormalized(normalized);
+        attribute.setStride(stride);
+        attribute.setValue(array);
     }
 
-    protected void setUniform(String uniformName, float... array){
+    protected void setUniform(String name, float... array){
         GLUniform uniform;
-        if (uniforms.containsKey(uniformName)) {
-            uniform = uniforms.get(uniformName);
+        if (uniforms.containsKey(name)) {
+            uniform = uniforms.get(name);
         }
         else {
             uniform = new GLUniform();
-            uniforms.put(uniformName, uniform);
+            uniforms.put(name, uniform);
         }
         uniform.setValue(array);
     }
 
-    protected void setUniform(String uniformName, int x){
+    protected void setUniform(String name, int x){
         GLUniform uniform;
-        if (uniforms.containsKey(uniformName)) {
-            uniform = uniforms.get(uniformName);
+        if (uniforms.containsKey(name)) {
+            uniform = uniforms.get(name);
         }
         else {
             uniform = new GLUniform();
-            uniforms.put(uniformName, uniform);
+            uniforms.put(name, uniform);
         }
         uniform.setValue(x);
     }
 
-    public void setUniform(String uniformName, float x) {
+    public void setUniform(String name, float x) {
         GLUniform uniform;
-        if (uniforms.containsKey(uniformName)) {
-            uniform = uniforms.get(uniformName);
+        if (uniforms.containsKey(name)) {
+            uniform = uniforms.get(name);
         }
         else {
             uniform = new GLUniform();
-            uniforms.put(uniformName, uniform);
+            uniforms.put(name, uniform);
         }
         uniform.setValue(x);
     }
@@ -168,8 +169,6 @@ public abstract class GLImage {
     }
 
     private int program;
-    private HashMap<String, Integer> attributeLocation;
-    private int[] attributeType;
     private final int[] programInfo = new int[6]; /* 6 é o número de MACROS */
 
     private final int GL_ACTIVE_ATTRIBUTES = 0;
@@ -246,11 +245,21 @@ public abstract class GLImage {
         byte[] name = new byte[programInfo[GL_ACTIVE_ATTRIBUTE_MAX_LENGTH]];
         int[] length = new int[1];
         int[] size = new int[1];
-        attributeType = new int[programInfo[GL_ACTIVE_ATTRIBUTES]];
-        attributeLocation = new HashMap<>(programInfo[GL_ACTIVE_ATTRIBUTES]);
-        for (int index = 0; index < programInfo[GL_ACTIVE_ATTRIBUTES]; index++) {
-            GL.glGetActiveAttrib(program, index, name.length, length, 0, size, 0, attributeType, index, name, 0);
-            attributeLocation.put(new String(name, 0, length[0]), index);
+        int[] type = new int[1];
+        for (int location = 0; location < programInfo[GL_ACTIVE_ATTRIBUTES]; location++) {
+            GL.glGetActiveAttrib(
+                    program, location, name.length, length, 0, size, 0, type, 0, name, 0);
+            String attributeName = new String(name, 0, length[0]);
+            GLAttribute attribute;
+            if (attributes.containsKey(attributeName)) {
+                attribute = attributes.get(attributeName);
+            }
+            else {
+                attribute = new GLAttribute();
+                attributes.put(attributeName, attribute);
+            }
+            attribute.setLocation(location);
+            attribute.setType(type[0]);
         }
     }
 
@@ -293,39 +302,8 @@ public abstract class GLImage {
 
     private void defineAttributes() {
         for (GLAttribute attribute :
-                attributes) {
-            int indx = attributeLocation.get(attribute.getName());
-
-            /* -1 é não implementado */
-            int size = attributeType[indx] == GL.GL_FLOAT_VEC4 ? 4
-                    : attributeType[indx] == GL.GL_FLOAT_VEC3 ? 3
-                    : attributeType[indx] == GL.GL_FLOAT_VEC2 ? 2
-                    : -1;
-            int type = attributeType[indx] == GL.GL_FLOAT_VEC4
-                    | attributeType[indx] == GL.GL_FLOAT_VEC3
-                    | attributeType[indx] == GL.GL_FLOAT_VEC2 ? GL.GL_FLOAT
-                    : -1;
-
-            if (size == -1 | type == -1)
-                throw new RuntimeException("Tipo do attribute no vertex shader não implementado.");
-
-            if (attribute.getOffset() >= 0) {
-
-                GL.glVertexAttribPointer(indx, size, type, attribute.getNormalized(),
-                        attribute.getStride() * size, attribute.getOffset() * size);
-
-            }
-            else if (attribute.getArray() != null) {
-                GL.glVertexAttribPointer(indx, size, type, attribute.getNormalized(),
-                        attribute.getStride() * size,
-                        attribute.getArray());
-
-            } else {
-                throw new RuntimeException("Attribute não inicializado");
-            }
-
-
-            GL.glEnableVertexAttribArray(indx);
+                attributes.values()) {
+            attribute.define();
         }
     }
 
