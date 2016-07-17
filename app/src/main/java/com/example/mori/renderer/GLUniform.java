@@ -6,54 +6,58 @@ package com.example.mori.renderer;
  */
 public class GLUniform {
     private int xi = 0;
-    private String name = "";
     private float[] array = null;
     private float xf;
+    private int type = -1;
+    private int location = -1;
 
-    public GLUniform(String name, float[] array) {
-        this.name = name;
-        this.array = array;
+    public void setLocation(int location) {
+        this.location = location;
     }
 
-    public GLUniform(String name, int x) {
-        this.name = name;
-        this.xi = x;
+    public void setType(int type) {
+        this.type = type;
     }
 
-    public GLUniform(String name, float x) {
-        this.name = name;
-        xf = x;
+    public void define() {
+        if (type == GL.GL_FLOAT_VEC2) {
+            GL.glUniform2fv(location, 1, array, 0);
+        }
+        else if (type == GL.GL_FLOAT_VEC3) {
+            GL.glUniform3fv(location, 1, array, 0);
+        }
+        else if (type == GL.GL_FLOAT_VEC4) {
+            GL.glUniform4fv(location, 1, array, 0);
+        }
+        else if (type == GL.GL_FLOAT_MAT2) {
+            GL.glUniformMatrix2fv(location, 1, false, array, 0);
+        }
+        else if (type == GL.GL_FLOAT_MAT3) {
+            GL.glUniformMatrix3fv(location, 1, false, array, 0);
+        }
+        else if (type == GL.GL_FLOAT_MAT4) {
+            GL.glUniformMatrix4fv(location, 1, false, array, 0);
+        }
+        else if (type == GL.GL_SAMPLER_2D) {
+            GL.glUniform1i(location, xi);
+        }
+        else if (type == GL.GL_FLOAT) {
+            GL.glUniform1f(location, xf);
+        }
+        else {
+            throw new RuntimeException("Caso não implementado: " + type);
+        }
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public float[] getArray() {
-        return array;
-    }
-
-    public void setArray(float[] array) {
-        this.array = array;
-    }
-
-    public int getXi() {
-        return xi;
-    }
-
-    public void setXi(int x) {
+    public void setValue(int x) {
         xi = x;
     }
 
-    public void setXf(float x) {
+    public void setValue(float x) {
         xf = x;
     }
 
-    public float getXf() {
-        return xf;
+    public void setValue(float[] array) {
+        this.array = array;
     }
 }
