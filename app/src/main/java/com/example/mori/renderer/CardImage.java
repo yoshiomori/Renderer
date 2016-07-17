@@ -1,5 +1,8 @@
 package com.example.mori.renderer;
 
+import android.opengl.Matrix;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -7,10 +10,12 @@ import java.util.HashMap;
  * Created by mori on 15/07/16.
  */
 public class CardImage extends GLImage{
-//    private final float[] invMMVPMatrix;
-//    private float[] v = new float[4];
-//    private ArrayList<Card> selectCards;
-//    private ArrayList<Card> cards = new ArrayList<>();
+    private ArrayList<GLObject> selectCards = new ArrayList<>();
+    private float[] invMMVPMatrix;
+    private float left = 0;
+    private float right = 0;
+    private float bottom = 0;
+    private float top = 0;
 
     public CardImage() {
         CardData cardData = new CardData();
@@ -76,6 +81,10 @@ public class CardImage extends GLImage{
         );
         setAttribute("vertex", false, 0, 0);
 
+        setScreen("left", "right", "bottom", "top");
+        setUniform("near", 3f);
+        setUniform("far", 7f);
+
         setUniform("eye", 0f, 0f, -6f);
         setUniform("center", 0f, 0f, 0f);
         setUniform("up", 0f, 1f, 0f);
@@ -85,74 +94,69 @@ public class CardImage extends GLImage{
         setPositionName("position");
         setColorName("card_coord");
 
-        addObject(new float[] {0.5f, 0.5f}, cardData.getCardCoord("As"));
-        addObject(new float[] {-0.5f, -0.5f}, cardData.getCardCoord("Back"));
-
-//        // Set the camera position (View matrix)
-//        float[] mViewMatrix = new float[16];
-//        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-//
-//        // Calculate the projection and view transformation
-//        float[] mMVPMatrix = new float[16];
-//        float[] mProjectionMatrix = new float[16];
-//        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-//        invMMVPMatrix = new float[16];
-//        Matrix.invertM(invMMVPMatrix, 0 , mMVPMatrix, 0);
-    }
-
-//    private class Card{
-//        private final String cardName;
-//        private final float x;
-//        private final float y;
-//
-//        public Card(String cardName, float x, float y) {
-//            this.cardName = cardName;
-//            this.x = x;
-//            this.y = y;
-//        }
-//
-//        public String getCardName() {
-//            return cardName;
-//        }
-//
-//        public float getX() {
-//            return x;
-//        }
-//
-//        public float getY() {
-//            return y;
-//        }
-//    }
-
-    @Override
-    public void onSurfaceChanged(int width, int height) {
-        float ratio = (float) width / height;
-        setUniform("left", -ratio);
-        setUniform("right", ratio);
-        setUniform("bottom", -1f);
-        setUniform("top", 1f);
-        setUniform("near", 3f);
-        setUniform("far", 7f);
+        addObject(new float[]{0.5f, 0.5f}, cardData.getCardCoord("As"));
+        addObject(new float[]{-0.5f, -0.5f}, cardData.getCardCoord("Back"));
     }
 
     @Override
-    public void onMove(float dx, float dy, float x, float y) {
-//        for (Card)
+    public void onMove(float dx, float dy) {
+        if (left != getLeft() || right != getRight() || bottom != getBottom() || top != getTop()) {
+            left = getLeft();
+            right = getRight();
+            bottom = getBottom();
+            top = getTop();
+            invMMVPMatrix = new float[16];
+            float[] mProjectionMatrix = new float[16];
+            Matrix.frustumM(mProjectionMatrix, 0, left, right, bottom, top, 3, 7);
+            float[] mViewMatrix = new float[16];
+            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+            float[] mMVPMatrix = new float[16];
+            Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+            Matrix.invertM(invMMVPMatrix, 0, mMVPMatrix, 0);
+        }
+        float[] d = new float[4];
+        Matrix.multiplyMV(d, 0, invMMVPMatrix, 0, new float[]{dx, dy, 0, 0}, 0);
+        for (GLObject card : selectCards) {
+            float[] position = card.getPosition();
+            card.setPosition(position[0] + d[0] * 6f, position[1] + d[1] * 6f);
+        }
     }
 
     @Override
     public void onDown(float x, float y) {
-//        Matrix.multiplyMV(v, 0, invMMVPMatrix, 0, new float[]{x, y, 0, 0}, 0);
-//        for(Card card: ) {
-//            float[] position = card.getPosition();
-//            if (Math.abs(position[0] - x) <= 0.890552f && Math.abs(position[1] - y) <= 0.634646f) {
-//                selectCards.add(card);
-//            }
-//        }
+        if (left != getLeft() || right != getRight() || bottom != getBottom() || top != getTop()) {
+            left = getLeft();
+            right = getRight();
+            bottom = getBottom();
+            top = getTop();
+            invMMVPMatrix = new float[16];
+            float[] mProjectionMatrix = new float[16];
+            Matrix.frustumM(mProjectionMatrix, 0, left, right, bottom, top, 3, 7);
+            float[] mViewMatrix = new float[16];
+            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -6, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+            float[] mMVPMatrix = new float[16];
+            Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+            Matrix.invertM(invMMVPMatrix, 0, mMVPMatrix, 0);
+        }
+        float[] v = new float[4];
+        Matrix.multiplyMV(v, 0, invMMVPMatrix, 0, new float[]{x, y, 0, 0}, 0);
+        ArrayList<GLObject> cards = getObjects();
+        for(int index = cards.size() - 1; index >= 0; index--) {
+            if (!selectCards.contains(cards.get(index))) {
+                float[] position = cards.get(index).getPosition();
+                if (Math.abs(position[0] - v[0] * 6f) <= 0.890552f
+                        && Math.abs(position[1] - v[1] * 6f ) <= 0.634646f) {
+                    selectCards.add(cards.get(index));
+                    break;
+                }
+            }
+        }
+
     }
 
     @Override
     public void onUp() {
+        selectCards.clear();
     }
 
     private class CardData {

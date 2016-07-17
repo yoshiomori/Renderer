@@ -72,9 +72,10 @@ public class GLRenderer implements GLSurfaceView.Renderer{
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
+        float ratio = (float) width / height;
         for (GLImage image :
                 images) {
-            image.onSurfaceChanged(width, height);
+            image.setScreen(ratio);
         }
     }
 

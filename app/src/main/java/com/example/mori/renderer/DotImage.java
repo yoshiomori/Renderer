@@ -28,12 +28,7 @@ public class DotImage extends GLImage {
     }
 
     @Override
-    public void onSurfaceChanged(int width, int height) {
-
-    }
-
-    @Override
-    public void onMove(float dx, float dy, float x, float y) {
+    public void onMove(float x, float y) {
 
     }
 
